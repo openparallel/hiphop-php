@@ -53,7 +53,11 @@ inline int64 hash_string(const char *arKey, int nKeyLength) {
   const uint64 m = 0xc6a4a7935bd1e995ULL;
   const int r = 47;
 
+#ifdef WORDSIZE_IS_64
+  register uint64 h = 0;
+#else
   uint64 h = 0;
+#endif
 
   const uint64 * data = (const uint64 *)arKey;
   const uint64 * end = data + (nKeyLength / 8);
@@ -93,7 +97,11 @@ inline int64 hash_string_i(const char *arKey, int nKeyLength) {
   const uint64 m = 0xc6a4a7935bd1e995ULL;
   const int r = 47;
 
+#ifdef WORDSIZE_IS_64
+  register uint64 h = 0;
+#else
   uint64 h = 0;
+#endif
 
   const uint64 * data = (const uint64 *)arKey;
   const uint64 * end = data + (nKeyLength / 8);
@@ -166,7 +174,11 @@ inline int64 hash_string_i(const char *arKey, int nKeyLength) {
  */
 
 inline int64 hash_string(const char *arKey, int nKeyLength) {
+#ifdef WORDSIZE_IS_64
+  register uint64 hash = 5381;
+#else
   uint64 hash = 5381;
+#endif
 
   /* variant with the hash unrolled eight times */
   for (; nKeyLength >= 8; nKeyLength -= 8) {
@@ -198,7 +210,12 @@ inline int64 hash_string(const char *arKey, int nKeyLength) {
 
 // Case insensitive version. Hash will be equivalent to hash_string of lower
 inline int64 hash_string_i(const char *arKey, int nKeyLength) {
+#ifdef WORDSIZE_IS_64
+  register uint64 hash = 5381;
+#else
   uint64 hash = 5381;
+#endif
+
   char c;
   char diff = 'a' - 'A';
   /* variant with the hash unrolled eight times */

@@ -126,6 +126,26 @@ hash_tiger::hash_tiger(bool tiger3, int digest)
 #	define split split_ex
 #endif
 
+#ifdef WORDSIZE_IS_64
+#define tiger_compress(passes, str, state)                              \
+  {                                                                     \
+    register uint64 a, b, c, tmpa, x0, x1, x2, x3, x4, x5, x6, x7; \
+    uint64 aa, bb, cc;                                           \
+    int pass_no;                                                        \
+                                                                        \
+    a = state[0];                                                       \
+    b = state[1];                                                       \
+    c = state[2];                                                       \
+                                                                        \
+    split(str);                                                         \
+                                                                        \
+    compress(passes);                                                   \
+                                                                        \
+    state[0] = a;                                                       \
+    state[1] = b;                                                       \
+    state[2] = c;                                                       \
+  }
+#else
 #define tiger_compress(passes, str, state)                              \
   {                                                                     \
     uint64 a, b, c, tmpa, x0, x1, x2, x3, x4, x5, x6, x7; \
@@ -144,6 +164,8 @@ hash_tiger::hash_tiger(bool tiger3, int digest)
     state[1] = b;                                                       \
     state[2] = c;                                                       \
   }
+
+#endif
 
 static inline void TigerFinalize(PHP_TIGER_CTX *context) {
   context->passed += (uint64) context->length << 3;
