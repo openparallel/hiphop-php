@@ -26,7 +26,7 @@ namespace HPHP {
 #ifdef WORDSIZE_IS_64
 #define L64(x) (x)
 #else
-#define L64(x) UINT64_C(x)
+#define L64(x) __CONCAT(x, ULL) 
 #endif
 
 DECLARE_BOOST_TYPES(HashEngine);
