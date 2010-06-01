@@ -1682,7 +1682,7 @@ char *string_hex2bin(const char *input, int &len) {
 }
 
 Variant string_base_to_numeric(const char *s, int len, int base) {
-  long num = 0;
+  int64 num = 0;
   double fnum = 0;
   int mode = 0;
   long cutoff;

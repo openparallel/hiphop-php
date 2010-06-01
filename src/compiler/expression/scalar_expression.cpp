@@ -441,7 +441,7 @@ void ScalarExpression::outputCPPString(CodeGenerator &cg,
       string output = getCPPLiteralString(&hasEmbeddedNull);
       if (hasEmbeddedNull) {
         char length[20];
-        snprintf(length, sizeof(length), "%ld", m_value.length());
+        snprintf(length, sizeof(length), "%lld", (long long)m_value.length());
         bool constant =
           (cg.getContext() == CodeGenerator::CppConstantsDecl) ||
           (cg.getContext() == CodeGenerator::CppClassConstantsImpl);

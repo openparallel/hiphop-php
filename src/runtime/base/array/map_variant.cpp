@@ -410,7 +410,7 @@ ArrayData *MapVariant::lval(CVarRef k, Variant *&ret, bool copy,
   }
 
   ssize_t index = insertKey(k, prehash);
-  if (index >= m_elems.size()) {
+  if (index >= (int64)m_elems.size()) {
     ret = NEW(Variant)();
     m_elems.push_back(ret);
   } else {
@@ -602,7 +602,7 @@ bool MapVariant::setFullPos(const FullPos &pos) {
   if (pos.primary != ArrayData::invalid_index) {
     m_pos = m_map.rawFind(pos.primary, pos.secondary);
   }
-  if (m_pos == ArrayData::invalid_index || m_pos >= m_elems.size()) {
+  if (m_pos == ArrayData::invalid_index || m_pos >= (int64)m_elems.size()) {
     return false;
   }
   return true;

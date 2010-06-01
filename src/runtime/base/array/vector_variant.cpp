@@ -102,7 +102,7 @@ Variant VectorVariant::getKey(ssize_t pos) const {
 
 Variant VectorVariant::get(int64 k, int64 prehash /* = -1 */,
                            bool error /* = false */) const {
-  if (k >= 0 && (ssize_t)k < m_elems.size()) {
+  if (k >= 0 && (ssize_t)k < (ssize_t)m_elems.size()) {
     return *m_elems[k];
   }
   if (error) {
@@ -131,7 +131,7 @@ Variant VectorVariant::get(CVarRef k, int64 prehash /* = -1 */,
                            bool error /* = false */) const {
   if (k.isNumeric()) {
     int64 index = k.toInt64();
-    if (index >= 0 && (ssize_t)index < m_elems.size()) {
+    if (index >= 0 && (ssize_t)index <  (ssize_t)m_elems.size()) {
       return *m_elems[index];
     }
     if (error) {
@@ -146,7 +146,7 @@ Variant VectorVariant::get(CVarRef k, int64 prehash /* = -1 */,
 }
 
 bool VectorVariant::exists(int64 k, int64 prehash /* = -1 */) const {
-  if (k >= 0 && (ssize_t)k < m_elems.size()) {
+  if (k >= 0 && (ssize_t)k <  (ssize_t)m_elems.size()) {
     return true;
   }
   return false;
@@ -163,7 +163,7 @@ bool VectorVariant::exists(CStrRef k, int64 prehash /* = -1 */) const {
 bool VectorVariant::exists(CVarRef k, int64 prehash /* = -1 */) const {
   if (k.isNumeric()) {
     int64 index = k.toInt64();
-    if (index >= 0 && (ssize_t)index < m_elems.size()) {
+    if (index >= 0 && (ssize_t)index < (ssize_t) m_elems.size()) {
       return true;
     }
   }
@@ -175,7 +175,7 @@ bool VectorVariant::idxExists(ssize_t idx) const {
 }
 
 ssize_t VectorVariant::getIndex(int64 k, int64 prehash /* = -1 */) const {
-  if (k >= 0 && (ssize_t)k < m_elems.size()) {
+  if (k >= 0 && (ssize_t)k < (ssize_t) m_elems.size()) {
     return k;
   }
   return ArrayData::invalid_index;
@@ -192,7 +192,7 @@ ssize_t VectorVariant::getIndex(CStrRef k, int64 prehash /* = -1 */) const {
 ssize_t VectorVariant::getIndex(CVarRef k, int64 prehash /* = -1 */) const {
   if (k.isNumeric()) {
     int64 index = k.toInt64();
-    if (index >= 0 && (ssize_t)index < m_elems.size()) {
+    if (index >= 0 && (ssize_t)index < (ssize_t) m_elems.size()) {
       return index;
     }
   }
@@ -343,8 +343,8 @@ ArrayData *VectorVariant::set(CVarRef k, CVarRef v,
 }
 
 ArrayData *VectorVariant::remove(int64 k, bool copy, int64 prehash /* = -1 */) {
-  if (k >= 0 && (ssize_t)k < m_elems.size()) {
-    if (!copy && (ssize_t)k == m_elems.size()-1) {
+  if (k >= 0 && (ssize_t)k < (ssize_t) m_elems.size()) {
+    if (!copy && (ssize_t)k == (ssize_t)m_elems.size()-1) {
       m_elems[k]->release();
       m_elems.remove(k);
       return NULL;
@@ -379,8 +379,8 @@ ArrayData *VectorVariant::remove(CVarRef k, bool copy,
                                  int64 prehash /* = -1 */) {
   if (k.isNumeric()) {
     int64 index = k.toInt64();
-    if (index >= 0 && (ssize_t)index < m_elems.size()) {
-      if (!copy && (ssize_t)index == m_elems.size()-1) {
+    if (index >= 0 && (ssize_t)index < (ssize_t)m_elems.size()) {
+      if (!copy && (ssize_t)index == (ssize_t)m_elems.size()-1) {
         m_elems[index]->release();
         m_elems.remove(index);
         return NULL;

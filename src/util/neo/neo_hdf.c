@@ -1595,6 +1595,7 @@ static NEOERR* _hdf_read_string (HDF *hdf, const char **str, STRING *line,
   char *name, *value;
   HDF_ATTR *attr = NULL;
 
+
   while (**str != '\0')
   {
     /* Reset string length, but don't free the reserved buffer */

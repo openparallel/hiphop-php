@@ -73,11 +73,11 @@ bool TestUtil::TestHphpMap() {
     VS(Variant("-0").toKey(), Variant("-0"));
     VS(Variant("-").toKey(), Variant("-"));
     VS(Variant("9223372036854775806").toKey(),
-       Variant(9223372036854775806));
+       Variant(9223372036854775806LL));
     VS(Variant("9223372036854775807").toKey(),
        Variant("9223372036854775807"));
     VS(Variant("-9223372036854775807").toKey(),
-       Variant(-9223372036854775807));
+       Variant(-9223372036854775807LL));
     VS(Variant("-9223372036854775808").toKey(),
        Variant("-9223372036854775808"));
   }

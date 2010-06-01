@@ -38,9 +38,9 @@ const HphpMapCell &HphpMapConstIterator::get() const {
 HphpMapConstIterator& HphpMapConstIterator::operator++() {
   const HphpVector<Cell> &table = m_map->m_table;
   ssize_t tsize = table.size();
-  if (m_idx != tsize) {
+  if ((ssize_t)m_idx != tsize) {
     m_idx++;
-    while (m_idx < tsize && !table[m_idx].alive()) { m_idx++; }
+    while ((ssize_t)m_idx < tsize && !table[m_idx].alive()) { m_idx++; }
   }
   return *this;
 }
@@ -52,9 +52,9 @@ HphpMapCell &HphpMapIterator::get() {
 HphpMapIterator& HphpMapIterator::operator++() {
   const HphpVector<Cell> &table = m_map->m_table;
   ssize_t tsize = table.size();
-  if (m_idx != tsize) {
+  if ((ssize_t)m_idx != tsize) {
     m_idx++;
-    while (m_idx < tsize && !table[m_idx].alive()) { m_idx++; }
+    while ((ssize_t)m_idx < tsize && !table[m_idx].alive()) { m_idx++; }
   }
   return *this;
 }
