@@ -4,7 +4,7 @@ include_once 'base.php';
 
 ///////////////////////////////////////////////////////////////////////////////
 
-p(
+pre(
 <<<END
 #include <system/gen/php/classes/exception.h>
 #include <runtime/ext/soap/soap.h>
@@ -180,11 +180,7 @@ c('SoapFault', 'exception', array(),
   "\n  public: String  m_faultactor;".
   "\n  public: Variant m_detail;".
   "\n  public: String  m_name;".
-  "\n  public: Variant m_headerfault;".
-  "\n  private: int64  _dummy;  // HACK: this class must be at least".
-  "\n                           // 176 bytes or else it causes a".
-  "\n                           // double-free error during shutdown".
-  "\n                           // when running 'make slow_tests'"
+  "\n  public: Variant m_headerfault;"
  );
 
 c('SoapParam', null, array(),

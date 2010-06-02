@@ -722,6 +722,17 @@ class Variant {
   void remove(CStrRef key, int64 prehash = -1);
   void remove(CVarRef key, int64 prehash = -1);
 
+  void weakRemove(litstr key, int64 prehash = -1) {
+    if (is(KindOfArray) ||
+        (is(KindOfObject) && getObjectData()->o_instanceof("arrayaccess"))) {
+      remove(key, prehash);
+    }
+    if (isString()) {
+      raise_error("Cannot unset string offsets");
+      return;
+    }
+  }
+
   template<typename T>
   void weakRemove(const T &key, int64 prehash = -1) {
     if (is(KindOfArray) ||
@@ -993,7 +1004,8 @@ class Variant {
     if (is(KindOfArray) || isNull() ||
         (is(KindOfBoolean) && !toBoolean()) ||
         (is(LiteralString) && !*getLiteralString()) ||
-        (is(KindOfString) && getStringData()->empty())) {
+        (is(KindOfString) && getStringData()->empty()) ||
+        (is(KindOfStaticString) && getStringData()->empty())) {
       return ref(lvalAt(key, prehash));
     } else {
       return rvalAt(key, prehash);

@@ -84,13 +84,15 @@ inline int64 hash_string(const char *arKey, int nKeyLength) {
   case 2: h ^= (uint64)(data2[1]) << 8;
   case 1: h ^= (uint64)(data2[0]);
           h *= m;
+          h &= 0x7fffffffffffffffLL;
   };
 
   h ^= h >> r;
   h *= m;
+  h &= 0x7fffffffffffffffLL;
   h ^= h >> r;
 
-  return h & 0x7fffffffffffffffULL;
+  return h;
 }
 
 inline int64 hash_string_i(const char *arKey, int nKeyLength) {
