@@ -999,7 +999,10 @@ bool TestCodeRun::TestString() {
        "function test1($a) {"
        "  $buf = '';"
        "  foreach ($a as $s) {"
-       "     $buf .= f() . g() . f() . g();"
+       "     $buf .= f() . g() . 'h' . f() . 'h' . g();"
+       "  }"
+       "  foreach ($a as $s) {"
+       "    $buf .= ($s . 'h' . $s);"
        "  }"
        "  return $buf;"
        "}"
@@ -1015,7 +1018,7 @@ bool TestCodeRun::TestString() {
        "function test4() {"
        "  $s = f();"
        "  $s .="
-       "    'foo'."
+       "    ('foo'."
        "    'bar'."
        "    f()."
        "    'foo'."
@@ -1025,12 +1028,20 @@ bool TestCodeRun::TestString() {
        "    'boo'."
        "    f()."
        "    'fiz'."
-       "    'faz';"
+       "     'faz');"
        ""
        "  $s .= f();"
        "  return $s;"
        "}"
-       "var_dump(test4());");
+       "var_dump(test4());"
+       "function test5() {"
+       "  return g().g().g().g();"
+       "}"
+       "var_dump(test5());"
+       "function test6() {"
+       "  return g().f().g();"
+       "}"
+       "var_dump(test6());");
 
   return true;
 }
@@ -7671,6 +7682,13 @@ bool TestCodeRun::TestGetObjectVars() {
       "$base_obj = new Base();"
       "$child_obj->foo($base_obj);"
       );
+
+  MVCR("<?php "
+       "var_dump(get_object_vars(false));"
+       "var_dump(get_object_vars(true));"
+       "var_dump(get_object_vars('hello'));"
+       "var_dump(get_object_vars(5));");
+
   return true;
 }
 
