@@ -483,7 +483,7 @@ bool TestExtMb::test_mb_strrchr() {
   {
     String text = "Line 1\nLine 2\xC3\x9C""Line 3";
     VS(f_strrchr(text, "\x9C"), "\x9C""Line 3");
-    VS(f_mb_strrchr(text, "\x9C"), false);
+    VS(f_mb_strrchr(text, "\x9C"), "Line 3");
   }
   return Count(true);
 }
@@ -554,7 +554,7 @@ bool TestExtMb::test_mb_substr_count() {
   VS(f_mb_substr_count(text, "is"), 2);
 
   // different from substr_count
-  VS(f_mb_substr_count("gcdgcdgcd", "gcdgcd"), 2);
+  VS(f_mb_substr_count("gcdgcdgcd", "gcdgcd"), 1);
   return Count(true);
 }
 

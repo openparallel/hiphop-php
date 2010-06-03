@@ -148,14 +148,14 @@ bool TestExtMysql::test_mysql_close() {
 bool TestExtMysql::test_mysql_errno() {
   Variant conn = f_mysql_connect(TEST_HOSTNAME, TEST_USERNAME, TEST_PASSWORD);
   VERIFY(!f_mysql_select_db("nonexistentdb"));
-  VS(f_mysql_errno(conn), 1049);
+  VS(f_mysql_errno(conn), 1044);
   return Count(true);
 }
 
 bool TestExtMysql::test_mysql_error() {
   Variant conn = f_mysql_connect(TEST_HOSTNAME, TEST_USERNAME, TEST_PASSWORD);
   VERIFY(!f_mysql_select_db("nonexistentdb"));
-  VS(f_mysql_error(conn), "Unknown database 'nonexistentdb'");
+  VS(f_mysql_error(conn), "Access denied for user 'test'@'localhost' to database 'nonexistentdb'");
   return Count(true);
 }
 

@@ -88,7 +88,7 @@ bool TestExtDatetime::test_date_date_set() {
 }
 
 bool TestExtDatetime::test_date_default_timezone_get() {
-  VS(f_date_default_timezone_get(), "America/Los_Angeles");
+  VS(f_date_default_timezone_get(), "America/Chicago");
   return Count(true);
 }
 

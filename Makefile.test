@@ -17,7 +17,8 @@ endif
 
 QuickTests = "" "" $@
 TestExt = "" "" $@
-FAST_TESTS := QuickTests TestExt TestCodeRunEval
+#FAST_TESTS := QuickTests TestExt TestCodeRunEval
+FAST_TESTS := QuickTests TestExt
 SLOW_TESTS := TestCodeRun TestServer
 
 all: fast_tests

@@ -106,7 +106,7 @@ bool TestExtSqlite3::test_sqlite3() {
   db->t_close();
 
   VS(db->t_version(),
-     CREATE_MAP2("versionString", "3.6.23.1", "versionNumber", 3006023));
+     CREATE_MAP2("versionString", "3.6.22", "versionNumber", 3006022));
   f_unlink(":memory:test");
   return Count(true);
 }

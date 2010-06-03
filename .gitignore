@@ -14,7 +14,6 @@
 /src/test/test_fbcode_error.h
 /src/test/test_fbdepend_graph.cpp
 /src/test/test_fbdepend_graph.h
-/src/test/test_mysql_info.inc
 /src/test/test_suite.inc
 /src/test/*.tmp
 
