@@ -858,7 +858,7 @@ void SimpleFunctionCall::outputCPPParamOrderControlled(CodeGenerator &cg,
     if (!needHash) {
       cg.printf(")");
     } else {
-      cg.printf(", 0x%.16lXLL)", hash_string_i(m_name.data(), m_name.size()));
+      cg.printf(", 0x%016llXLL)", hash_string_i(m_name.data(), m_name.size()));
     }
   }
   if (volatileCheck) {
