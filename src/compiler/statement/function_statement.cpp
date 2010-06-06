@@ -139,6 +139,7 @@ void FunctionStatement::outputCPPImpl(CodeGenerator &cg, AnalysisResultPtr ar) {
   bool pseudoMain = funcScope->inPseudoMain();
   string origFuncName = !pseudoMain ? funcScope->getOriginalName() :
           ("run_init::" + funcScope->getFileScope()->getName());
+  string funcSection;
 
   if (outputFFI(cg, ar)) return;
 
@@ -199,12 +200,10 @@ void FunctionStatement::outputCPPImpl(CodeGenerator &cg, AnalysisResultPtr ar) {
     cg.printf("void");
   }
 
-  if (Option::HotFunctions.find(origFuncName) !=
-      Option::HotFunctions.end()) {
-    cg.printf(" __attribute((__section__(\".text.hot\")))");
-  } else if (Option::ColdFunctions.find(origFuncName) !=
-             Option::ColdFunctions.end()) {
-    cg.printf(" __attribute((__section__(\".text.cold\")))");
+  funcSection = Option::FunctionSections[origFuncName];
+  if (!funcSection.empty()) {
+    cg.printf(" __attribute__ ((section (\".text.%s\")))",
+              funcSection.c_str());
   }
 
   if (pseudoMain) {
@@ -239,7 +238,9 @@ void FunctionStatement::outputCPPImpl(CodeGenerator &cg, AnalysisResultPtr ar) {
         cg.printf("PSEUDOMAIN_INJECTION(%s);\n",
                   origFuncName.c_str());
       } else {
-        cg.printf("FUNCTION_INJECTION(%s);\n", origFuncName.c_str());
+        if (m_stmt->hasBody()) {
+          cg.printf("FUNCTION_INJECTION(%s);\n", origFuncName.c_str());
+        }
         if (Option::GenRTTIProfileData && m_params) {
           for (int i = 0; i < m_params->getCount(); i++) {
             ParameterExpressionPtr param =

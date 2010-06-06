@@ -32,6 +32,7 @@
 /facebook/push/install
 /facebook/autoload_files
 /facebook/volatile.hdf
+/facebook/hotcold.hdf
 
 /local/*.mk
 
