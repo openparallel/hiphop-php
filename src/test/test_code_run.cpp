@@ -3589,6 +3589,19 @@ bool TestCodeRun::TestUnset() {
       "var_dump($obj);"
       "unset($obj->a, $obj->b);"
       "var_dump($obj);");
+  MVCR("<?php;"
+       "class X {"
+       "  function __construct() { echo 'construct\n'; }"
+       "  function __destruct() { echo 'destruct\n'; }"
+       "}"
+       "function test() {"
+       "  $a = new X;"
+       "  echo 'before unset\n';"
+       "  unset($a);"
+       "  echo 'after unset\n';"
+       "}"
+       "test();");
+
   return true;
 }
 
@@ -7576,6 +7589,15 @@ bool TestCodeRun::TestEvalOrder() {
 
   MVCR("<?php var_dump($v++, $v++);");
   MVCR("<?php var_dump($v, $v = 0);");
+  MVCR("<?php\n"
+       "function f(&$a, &$b) { $a = 1; $b = 2; return 3; }\n"
+       "class A { }\n"
+       "function test() {\n"
+       "  $a = array(); f($a[0], $a[1]); var_dump($a);\n"
+       "  $a = array(); $a[0] = f($a[1], $a[2]); var_dump($a);\n"
+       "  $a = new A(); f($a->f, $a->g); var_dump($a);\n"
+       "}\n"
+       "test();\n");
 
  return true;
 }
@@ -10668,6 +10690,33 @@ bool TestCodeRun::TestVariableClassName() {
 bool TestCodeRun::TestLateStaticBinding() {
   MVCRO(
     "<?php\n"
+    "class A {\n"
+    "    const NAME = 'A';\n"
+    "    public static function test() {\n"
+    "        $args = func_get_args();\n"
+    "        echo static::NAME, \" \".join(',', $args).\" \\n\";\n"
+    "    }\n"
+    "}\n"
+    "class B extends A {\n"
+    "    const NAME = 'B';\n"
+    "    public static function test() {\n"
+    "        echo self::NAME, \"\\n\";\n"
+    "        forward_static_call(array('A', 'test'), 'more', 'args');\n"
+    "        forward_static_call( 'test', 'other', 'args');\n"
+    "    }\n"
+    "}\n"
+    "B::test('foo');\n"
+    "function test() {\n"
+    "    $args = func_get_args();\n"
+    "    echo \"C \".join(',', $args).\" \\n\";\n"
+    "}\n",
+    "B\n"
+    "B more,args \n"
+    "C other,args \n"
+  );
+
+  MVCRO(
+    "<?php\n"
     "class X {\n"
     "  function f() {\n"
     "    $y = new Y;\n"
@@ -10675,12 +10724,13 @@ bool TestCodeRun::TestLateStaticBinding() {
     "    static::g();\n"
     "    $y->foo();\n"
     "    self::g();\n"
+    "    Y::foo() && static::g();\n"
     "  }\n"
     "  static function g() { var_dump(__CLASS__); }\n"
     "}\n"
     "class Y extends X {\n"
     "  static function g() { var_dump(__CLASS__); }\n"
-    "  static function foo() {}\n"
+    "  static function foo() { return true; }\n"
     "}\n"
     "function test() {\n"
     "  $x = new X;\n"
@@ -10691,8 +10741,10 @@ bool TestCodeRun::TestLateStaticBinding() {
     "test();\n",
     "string(1) \"X\"\n"
     "string(1) \"X\"\n"
+    "string(1) \"X\"\n"
     "string(1) \"Y\"\n"
     "string(1) \"X\"\n"
+    "string(1) \"Y\"\n"
   );
 
   MVCRO(
@@ -10744,6 +10796,16 @@ bool TestCodeRun::TestLateStaticBinding() {
     "string(1) \"B\"\n"
     "string(1) \"A\"\n"
   );
+
+  MVCR("<?php "
+       "class X {"
+       "  static function foo() { return false; }"
+       "  static function bar() { return 5.5; }"
+       "  static function baz() { return time(); }"
+       "  }"
+       "var_dump(X::foo());"
+       "var_dump(X::bar());"
+       "var_dump(gettype(X::baz()));");
 
   return true;
 }
