@@ -23,6 +23,7 @@
 #include <runtime/base/externals.h>
 #include <runtime/ext/ext_variable.h>
 #include <runtime/base/runtime_option.h>
+#include <runtime/base/fiber_async_func.h>
 
 using namespace std;
 
@@ -1651,8 +1652,7 @@ Variant Variant::toKey() const {
   case LiteralString:
     {
       int64 n;
-      StringData *sk = toString().get();
-      if (sk->isStrictlyInteger(n)) {
+      if (toString()->isStrictlyInteger(n)) {
         return n;
       } else {
         return *this;
@@ -2888,6 +2888,45 @@ Variant Variant::share(bool save) const {
   }
 
   return false; // same as non-existent
+}
+
+Variant Variant::fiberCopy() {
+  if (m_type == KindOfVariant) {
+    Variant *mpvar = m_data.pvar;
+    if (mpvar->getCount() > 1) {
+      Variant *pvar = (Variant*)FiberReferenceMap::Lookup(mpvar);
+      if (pvar == NULL) {
+        pvar = NEW(Variant)();
+        *pvar = mpvar->fiberCopy();
+        FiberReferenceMap::Insert(mpvar, pvar);
+      }
+      return pvar;
+    }
+    return mpvar->fiberCopy();
+  }
+
+  switch (m_type) {
+  case KindOfNull:    return Variant();
+  case KindOfBoolean: return (m_data.num != 0);
+  case KindOfByte:
+  case KindOfInt16:
+  case KindOfInt32:
+  case KindOfInt64:   return m_data.num;
+  case KindOfDouble:  return m_data.dbl;
+  case LiteralString: return m_data.str;
+  case KindOfStaticString:
+  case KindOfString:
+    return String(m_data.pstr->data(), m_data.pstr->size(), CopyString);
+  case KindOfArray:
+    return Array(m_data.parr->copy());
+  case KindOfObject:
+    return Object(m_data.pobj).fiberCopy();
+  default:
+    ASSERT(false);
+    break;
+  }
+
+  return Variant();
 }
 
 const char *Variant::getTypeString(DataType type) {

@@ -271,12 +271,14 @@ public:
                           FindClassBy by = ClassName);
   const ClassScopePtrVec &findClasses(const std::string &className);
   bool classMemberExists(const std::string &name, FindClassBy by);
+  ClassScopePtr findExactClass(const std::string &name);
   bool checkClassPresent(const std::string &name);
   FunctionScopePtr findFunction(const std::string &funcName);
   FunctionScopePtr findHelperFunction(const std::string &funcName);
   BlockScopePtr findConstantDeclarer(const std::string &constName);
   bool isConstantDeclared(const std::string &constName);
   bool isConstantRedeclared(const std::string &constName);
+  bool isSystemConstant(const std::string &constName);
   bool isBaseSysRsrcClass(const std::string &className);
   void addNonFinal(const std::string &className);
   bool isNonFinalClass(const std::string &className);

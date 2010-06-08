@@ -1130,13 +1130,13 @@ bool TestCodeRun::TestArray() {
       "  }"
       "}");
 
-  MVCR("$a = array('a' => 1, 'b' => 2);"
+  MVCR("<?php $a = array('a' => 1, 'b' => 2);"
       "foreach ($a as $b => $c) {"
       "  var_dump($b);"
       "  unset($a['b']);"
       "}");
 
-  MVCR("$a = array('a' => 1, 'b' => 2);"
+  MVCR("<?php $a = array('a' => 1, 'b' => 2);"
       "foreach ($a as $b => &$c) {"
       "  var_dump($b);"
       "  unset($a['b']);"
@@ -1433,6 +1433,32 @@ bool TestCodeRun::TestArrayOffset() {
 }
 
 bool TestCodeRun::TestArrayAccess() {
+  //MVCR("<?php\n"
+  //    "class A implements ArrayAccess {"
+  //    "  public $a;"
+  //    "  public function offsetExists($offset) {"
+  //    "    echo \"offsetExist\";"
+  //    "    return false;"
+  //    "  }"
+  //    "  public function offsetGet($offset) {"
+  //    "    echo \"offsetGet\";"
+  //    "    return $this->$offset.'get';"
+  //    "  }"
+  //    "  public function offsetSet($offset, $value) {"
+  //    "    $this->$offset = $value.'set';"
+  //    "  }"
+  //    "  public function offsetUnset($offset) {"
+  //    "    $this->$offset = 'unset';"
+  //    "  }"
+  //    "}"
+  //    "function f() { var_dump('f()'; return 1; }\n"
+  //    "function test($a) {\n"
+  //    "$a['foo'] .= f();\n"
+  //    "$a['bar'] += f();\n"
+  //    "}\n"
+  //    "test(new A)\n"
+  //    );
+
   MVCR("<?php "
       "class A implements ArrayAccess {"
       "  public $a;"
@@ -1872,7 +1898,7 @@ bool TestCodeRun::TestVariant() {
   MVCR("<?php $a = 1; $a = 'test'; $b = 'zzz'; $a &= $b; var_dump($a);");
   MVCR("<?php $a = 1; $a = 'test'; $b = 'zzz'; $a |= $b; var_dump($a);");
   MVCR("<?php $a = 1; $a = 'test'; $b = 'zzz'; $a ^= $b; var_dump($a);");
-  MVCR("<? class a { public $var2 = 1; public $var1; }"
+  MVCR("<?php class a { public $var2 = 1; public $var1; }"
       "class b extends a { public $var2; }"
       "function f() { $obj1 = new b(); var_dump($obj1); $obj1->var1 = 1; }"
       "f();"); //#147156
@@ -3672,7 +3698,7 @@ bool TestCodeRun::TestReference() {
   //VCR("<?php $a = array('a' => &$a); $b = array($a); var_dump($b);");
 
   // shallow copy of members (either of arrays or objects)
-  MVCR("function test($a) { $a[1] = 10; $a['r'] = 20;} "
+  MVCR("<?php function test($a) { $a[1] = 10; $a['r'] = 20;} "
       "$b = 5; $a = array('r' => &$b); $a['r'] = 6; test($a); var_dump($a);");
 
   MVCR("<?php "
@@ -4772,6 +4798,24 @@ bool TestCodeRun::TestCompilation() {
        "function test($a) {"
        "  $x = ($a->foo = f($b++, $b++, $b++)) . f(1,2,3);"
        "  return $x;"
+       "}");
+
+  MVCR("<?php;"
+       "function g() {}"
+       "function test1() {"
+       "  return '' . g();"
+       "}");
+
+  MVCR("<?php;"
+       "function g() {}"
+       "function test1() {"
+       "  return 0 + g();"
+       "}");
+
+  MVCR("<?php;"
+       "function g() {}"
+       "function test1() {"
+       "  return 1 * g();"
        "}");
 
   return true;
@@ -7188,6 +7232,24 @@ bool TestCodeRun::TestRedeclaredClasses() {
   MVCR("<?php "
        "class X extends Y {}"
        "function test() { return new x;}");
+  MVCR("<?php;"
+       "function nop($en,$es){};set_error_handler('nop');"
+       "class X { function bar() { var_dump($this); } }"
+       "if (1) {"
+       "  class U {"
+       "  }"
+       "} else {"
+       "  class U extends X {"
+       "  }"
+       "}"
+       "class V extends U {}"
+       "function test() {"
+       "  $x = new X;"
+       "  $x->bar();"
+       "  $x = new V;"
+       "  $x->bar();"
+       "}"
+       "test();");
 
   return true;
 }
@@ -9280,7 +9342,7 @@ bool TestCodeRun::TestDOMDocument() {
        "}\n"
       );
 
-  MVCR("<?PHP\n"
+  MVCR("<?php\n"
        "$xmlstr = \"<?xml version='1.0' standalone='yes'?>\n"
        "<!DOCTYPE chapter SYSTEM '/share/sgml/Norman_Walsh/"
        "db3xml10/db3xml10.dtd'\n"

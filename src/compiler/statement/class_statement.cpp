@@ -45,7 +45,8 @@ ClassStatement::ClassStatement
  int type, const std::string &name, const std::string &parent,
  ExpressionListPtr base, const std::string &docComment, StatementListPtr stmt)
   : InterfaceStatement(STATEMENT_CONSTRUCTOR_PARAMETER_VALUES,
-                       name, base, docComment, stmt), m_type(type) {
+                       name, base, docComment, stmt),
+    m_type(type), m_ignored(false) {
   m_parent = Util::toLower(parent);
 }
 
@@ -80,7 +81,10 @@ void ClassStatement::onParse(AnalysisResultPtr ar) {
                                           bases, m_docComment,
                                           stmt, ar->getFileScope()));
   m_classScope = classScope;
-  ar->getFileScope()->addClass(ar, classScope);
+  if (!ar->getFileScope()->addClass(ar, classScope)) {
+    m_ignored = true;
+    return;
+  }
   ar->recordClassSource(m_name, ar->getFileScope()->getName());
 
   if (m_stmt) {
@@ -272,7 +276,9 @@ void ClassStatement::outputCPPClassDecl(CodeGenerator &cg,
 
   cg.printSection("DECLARE_STATIC_PROP_OPS");
   cg.printf("public:\n");
-  cg.printf("static void os_static_initializer();\n");
+  if (classScope->needStaticInitializer()) {
+    cg.printf("static void os_static_initializer();\n");
+  }
   if (variables->hasJumpTable(VariableTable::JumpTableClassStaticGetInit)) {
     cg.printf("static Variant os_getInit(const char *s, int64 hash);\n");
   } else {
@@ -413,7 +419,7 @@ void ClassStatement::outputCPPImpl(CodeGenerator &cg, AnalysisResultPtr ar) {
       ClassScopePtr parCls;
       if (!m_parent.empty()) parCls = ar->findClass(m_parent);
       cg.printf("class %s%s", Option::ClassPrefix, clsName);
-      if (!m_parent.empty() && classScope->derivesFrom(ar, m_parent)) {
+      if (!m_parent.empty() && classScope->derivesDirectlyFrom(ar, m_parent)) {
         if (!parCls || parCls->isRedeclaring()) {
           cg.printf(" : public DynamicObjectData");
         } else {
@@ -711,7 +717,7 @@ void ClassStatement::outputCPPImpl(CodeGenerator &cg, AnalysisResultPtr ar) {
 
       ClassScopePtr parCls;
       if (!m_parent.empty()) parCls = ar->findClass(m_parent);
-      if (!m_parent.empty() && classScope->derivesFrom(ar, m_parent)
+      if (!m_parent.empty() && classScope->derivesDirectlyFrom(ar, m_parent)
           && parCls && parCls->isUserClass() && !parCls->isRedeclaring()) {
         // system classes are not supported in static FFI translation
         // they shouldn't appear as superclasses as well
@@ -727,7 +733,7 @@ void ClassStatement::outputCPPImpl(CodeGenerator &cg, AnalysisResultPtr ar) {
             dynamic_pointer_cast<ScalarExpression>((*m_base)[i]);
           const char *intf = exp->getString().c_str();
           ClassScopePtr intfClassScope = ar->findClass(intf);
-          if (intfClassScope && classScope->derivesFrom(ar, intf)
+          if (intfClassScope && classScope->derivesFrom(ar, intf, false, false)
            && intfClassScope->isUserClass()) {
             if (first) {
               cgCls.printf(" implements ");

@@ -187,7 +187,10 @@ public:
   /**
    * Testing whether this class derives from another.
    */
-  bool derivesFrom(AnalysisResultPtr ar, const std::string &base) const;
+  bool derivesDirectlyFrom(AnalysisResultPtr ar,
+                           const std::string &base) const;
+  bool derivesFrom(AnalysisResultPtr ar, const std::string &base,
+                   bool strict, bool def) const;
 
   /**
    * Look up function by name.
@@ -316,7 +319,7 @@ public:
   /**
    * Override function container
    */
-  virtual void addFunction(AnalysisResultPtr ar, FunctionScopePtr funcScope);
+  virtual bool addFunction(AnalysisResultPtr ar, FunctionScopePtr funcScope);
   void outputCPPJumpTable(CodeGenerator &cg, AnalysisResultPtr ar,
                           bool staticOnly, bool dynamicObject = false,
                           bool forEval = false);

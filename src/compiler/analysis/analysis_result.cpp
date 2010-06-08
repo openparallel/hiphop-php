@@ -264,7 +264,32 @@ bool AnalysisResult::classMemberExists(const std::string &name,
   if (by == MethodName) {
     return m_methodToClassDecs.find(name) != m_methodToClassDecs.end();
   }
-  return  m_classDecs.find(name) != m_classDecs.end();
+  return m_classDecs.find(name) != m_classDecs.end();
+}
+
+ClassScopePtr AnalysisResult::findExactClass(const std::string &name) {
+  ClassScopePtr cls = findClass(name);
+  if (!cls || !cls->isRedeclaring()) return cls;
+  std::string lowerName = Util::toLower(name);
+  if (ClassScopePtr currentCls = getClassScope()) {
+    if (lowerName == currentCls->getName()) {
+      return currentCls;
+    }
+  }
+  if (FileScopePtr currentFile = getFileScope()) {
+    StatementList &stmts = *currentFile->getStmt();
+    for (int i = stmts.getCount(); i--; ) {
+      StatementPtr s = stmts[i];
+      if (s && s->is(Statement::KindOfClassStatement)) {
+        ClassScopePtr scope =
+          static_pointer_cast<ClassStatement>(s)->getClassScope();
+        if (lowerName == scope->getName()) {
+          return scope;
+        }
+      }
+    }
+  }
+  return ClassScopePtr();
 }
 
 bool AnalysisResult::checkClassPresent(const std::string &name) {
@@ -272,7 +297,8 @@ bool AnalysisResult::checkClassPresent(const std::string &name) {
   std::string lowerName = Util::toLower(name);
   if (ClassScopePtr currentCls = getClassScope()) {
     if (lowerName == currentCls->getName() ||
-        currentCls->derivesFrom(shared_from_this(), lowerName)) {
+        currentCls->derivesFrom(shared_from_this(), lowerName,
+                                true, false)) {
       return true;
     }
   }
@@ -286,8 +312,10 @@ bool AnalysisResult::checkClassPresent(const std::string &name) {
         if (lowerName == scope->getName()) {
           return true;
         }
-        if (scope->derivesFrom(shared_from_this(), lowerName))
+        if (scope->derivesFrom(shared_from_this(), lowerName,
+                               true, false)) {
           return true;
+        }
       }
     }
   }
@@ -475,6 +503,10 @@ bool AnalysisResult::isBaseSysRsrcClass(const std::string &className) {
 
 bool AnalysisResult::isConstantRedeclared(const std::string &constName) {
   return m_constRedeclared.find(constName) != m_constRedeclared.end();
+}
+
+bool AnalysisResult::isSystemConstant(const std::string &constName) {
+  return m_constants->isSystem(constName);
 }
 
 void AnalysisResult::addCallee(StatementPtr stmt) {
@@ -1621,6 +1653,8 @@ void AnalysisResult::outputCPPDynamicTables(CodeGenerator::Output output) {
     }
 
     if (system) {
+      cg.printf("raise_notice(\"Use of undefined constant %%s -- "
+              "assumed '%%s'.\", s, s);\n"),
       cg.printf("return name;\n");
     } else {
       cg.printf("return get_builtin_constant(name);\n");

@@ -267,14 +267,29 @@ bool ClassScope::needsInvokeParent(AnalysisResultPtr ar,
   return false;
 }
 
-bool ClassScope::derivesFrom(AnalysisResultPtr ar,
-                             const std::string &base) const {
+bool ClassScope::derivesDirectlyFrom(AnalysisResultPtr ar,
+                                     const std::string &base) const {
   BOOST_FOREACH(std::string base_i, m_bases) {
     if (base_i == base) return true;
   }
+  return false;
+}
+
+bool ClassScope::derivesFrom(AnalysisResultPtr ar,
+                             const std::string &base,
+                             bool strict, bool def) const {
+
+  if (derivesDirectlyFrom(ar, base)) return true;
+
   BOOST_FOREACH(std::string base_i, m_bases) {
     ClassScopePtr cl = ar->findClass(base_i);
-    if (cl && cl->derivesFrom(ar, base)) return true;
+    if (cl) {
+      if (strict && cl->isRedeclaring()) {
+        if (def) return true;
+        continue;
+      }
+      if (cl->derivesFrom(ar, base, strict, def)) return true;
+    }
   }
   return false;
 }
@@ -292,11 +307,20 @@ FunctionScopePtr ClassScope::findFunction(AnalysisResultPtr ar,
   }
 
   // walk up
-  if (recursive && derivesFromRedeclaring() != DirectFromRedeclared) {
-    for (int i = m_bases.size() - 1; i >= 0; i--) {
+  if (recursive) {
+    int s = m_bases.size();
+    for (int i = 0; i < s; i++) {
       const string &base = m_bases[i];
       ClassScopePtr super = ar->findClass(base);
-      if (!super || (super->isInterface() && exclIntfBase)) continue;
+      if (!super) continue;
+      if (exclIntfBase && super->isInterface()) break;
+      if (super->isRedeclaring()) {
+        if (!super->isInterface()) {
+          m_derivesFromRedeclaring = DirectFromRedeclared;
+          break;
+        }
+        continue;
+      }
       FunctionScopePtr func =
         super->findFunction(ar, name, true, exclIntfBase);
       if (func) return func;
@@ -989,7 +1013,7 @@ void ClassScope::outputCPPGlobalTableWrappersImpl(CodeGenerator &cg,
   cg.indentEnd("};\n");
 }
 
-void ClassScope::addFunction(AnalysisResultPtr ar,
+bool ClassScope::addFunction(AnalysisResultPtr ar,
                              FunctionScopePtr funcScope) {
   FunctionScopePtrVec &funcs = m_functions[funcScope->getName()];
   if (funcs.size() == 1) {
@@ -1002,6 +1026,7 @@ void ClassScope::addFunction(AnalysisResultPtr ar,
     funcScope->setRedeclaring(funcs.size());
   }
   funcs.push_back(funcScope);
+  return true;
 }
 
 void ClassScope::findJumpTableMethods(CodeGenerator &cg, AnalysisResultPtr ar,

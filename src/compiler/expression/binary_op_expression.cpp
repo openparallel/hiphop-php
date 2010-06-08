@@ -284,7 +284,8 @@ ExpressionPtr BinaryOpExpression::simplifyArithmetic(AnalysisResultPtr ar) {
       if ((ival1 == 1 && m_op == '*') || (ival1 == 0 && m_op == '+')) {
         TypePtr actType2 = m_exp2->getActualType();
         TypePtr expType2 = m_exp2->getExpectedType();
-        if ((actType2->isInteger() || actType2->is(Type::KindOfDouble)) ||
+        if ((actType2 &&
+             (actType2->isInteger() || actType2->is(Type::KindOfDouble))) ||
             (expType2 && expType2->is(Type::KindOfNumeric) &&
              Type::IsCastNeeded(ar, actType2, expType2))) {
           return m_exp2;
@@ -296,7 +297,7 @@ ExpressionPtr BinaryOpExpression::simplifyArithmetic(AnalysisResultPtr ar) {
         TypePtr actType2 = m_exp2->getActualType();
         TypePtr expType2 = m_exp2->getExpectedType();
         // '' . $a => $a
-        if (actType2->is(Type::KindOfString) ||
+        if ((actType2 && actType2->is(Type::KindOfString)) ||
             (expType2 && expType2->is(Type::KindOfString) &&
              Type::IsCastNeeded(ar, actType2, expType2))) {
           return m_exp2;
@@ -311,7 +312,8 @@ ExpressionPtr BinaryOpExpression::simplifyArithmetic(AnalysisResultPtr ar) {
       if ((ival2 == 1 && m_op == '*') || (ival2 == 0 && m_op == '+')) {
         TypePtr actType1 = m_exp1->getActualType();
         TypePtr expType1 = m_exp1->getExpectedType();
-        if ((actType1->isInteger() || actType1->is(Type::KindOfDouble)) ||
+        if ((actType1 &&
+             (actType1->isInteger() || actType1->is(Type::KindOfDouble))) ||
             (expType1 && expType1->is(Type::KindOfNumeric) &&
              Type::IsCastNeeded(ar, actType1, expType1))) {
           return m_exp1;
@@ -323,7 +325,7 @@ ExpressionPtr BinaryOpExpression::simplifyArithmetic(AnalysisResultPtr ar) {
         TypePtr actType1 = m_exp1->getActualType();
         TypePtr expType1 = m_exp1->getExpectedType();
         // $a . '' => $a
-        if (actType1->is(Type::KindOfString) ||
+        if ((actType1 && actType1->is(Type::KindOfString)) ||
             (expType1 && expType1->is(Type::KindOfString) &&
              Type::IsCastNeeded(ar, actType1, expType1))) {
           return m_exp1;
@@ -343,42 +345,12 @@ ExpressionPtr BinaryOpExpression::postOptimize(AnalysisResultPtr ar) {
   return ExpressionPtr();
 }
 
-static ExpressionPtr makeIsNull(LocationPtr loc, ExpressionPtr exp) {
-  /* Replace "$x === null" with an is_null call; this requires slightly
-   * less work at runtime. */
-  ExpressionListPtr expList =
-    ExpressionListPtr(new ExpressionList(loc,
-      Expression::KindOfExpressionList));
-  expList->insertElement(exp);
-
-  SimpleFunctionCallPtr call
-    (new SimpleFunctionCall(loc, Expression::KindOfSimpleFunctionCall,
-                            "is_null", expList, ExpressionPtr()));
-
-  call->setValid();
-  call->setActualType(Type::Boolean);
-
-  return call;
-}
-
 ExpressionPtr BinaryOpExpression::foldConst(AnalysisResultPtr ar) {
   ExpressionPtr optExp;
   Variant v1;
   Variant v2;
 
-  if (!m_exp2->getScalarValue(v2)) {
-    if (m_exp1->isScalar() && m_exp1->getScalarValue(v1)) {
-      switch (m_op) {
-        case T_IS_IDENTICAL:
-          if (v1.isNull()) return makeIsNull(getLocation(), m_exp2);
-          break;
-        default:
-          break;
-      }
-    }
-
-    return ExpressionPtr();
-  }
+  if (!m_exp2->getScalarValue(v2)) return ExpressionPtr();
 
   if (m_exp1->isScalar()) {
     if (!m_exp1->getScalarValue(v1)) return ExpressionPtr();
@@ -470,9 +442,6 @@ ExpressionPtr BinaryOpExpression::foldConst(AnalysisResultPtr ar) {
     case T_LOGICAL_AND:
       optExp = foldConstRightAssoc(ar);
       if (optExp) return optExp;
-      break;
-    case T_IS_IDENTICAL:
-      if (v2.isNull()) return makeIsNull(getLocation(), m_exp1);
       break;
     default:
       break;
