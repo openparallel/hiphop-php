@@ -1,4 +1,3 @@
-
 #FIND_PROGRAM(AWK_EXECUTABLE NAMES gawk awk)
 #if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/EastAsianWidth.txt")
 #	message(STATUS "Downloading EastAsianWidth.txt")
