@@ -1230,6 +1230,17 @@ bool TestCodeRun::TestArray() {
        "test(array(1));"
        "test(array(1,2,3,4,5,6,7,8,9));");
 
+  MVCR("<?php "
+      "function foo() {"
+      "  $a = array();"
+      "  $a[] = '1.1';"
+      "  $a[] = '2.2';"
+      "  $a[] = '3.3';"
+      "  var_dump(array_sum($a));"
+      "  var_dump(array_product($a));"
+      "}"
+      "foo();");
+
   return true;
 }
 
@@ -1653,6 +1664,13 @@ bool TestCodeRun::TestArrayIterator() {
       "  print \"$a: $b\n\";"
       "}"
       );
+  MVCR("<?php\n"
+      "$a = array(1, 2, 3, 4, 5, 6);\n"
+      "while ($v = each($a)) { if ($v[1] < 4) $a[] = $v[1] + $v[1]; }\n"
+      "var_dump($a);\n"
+      "$a = array(1, 2, 3, 4, 5, 6);\n"
+      "foreach ($a as $k => $v) { if ($v >= 4) $a = $v + $v; }\n"
+      "var_dump($a);\n");
   return true;
 }
 
@@ -3000,6 +3018,52 @@ bool TestCodeRun::TestObjectMagicMethod() {
       "$x->t();"
       "$x->t2();");
 
+  MVCR("<?php "
+      "class X implements arrayaccess {"
+      "function offsetGet($n) { return $n; }"
+      "function offsetSet($n, $v) { var_dump($n); }"
+      "function offsetExists($n) { var_dump($n); return true; }"
+      "function offsetUnset($n) { var_dump($n); }"
+      "function __toString() { return 'baz'; }"
+      "}"
+      ""
+      "$a = new X;"
+      "echo \"sets\\n\";"
+      "$a[true] = 5;"
+      "$a[NULL] = 57;"
+      "$a[3.2] = 25;"
+      "$a[array(3)] = 30;"
+      "$a[$a] = 32;"
+      "$a['57'] = 5;"
+      "$a['6.5'] = 7;"
+      ""
+      "echo \"gets\\n\";"
+      "var_dump($a[true]);"
+      "var_dump($a[NULL]);"
+      "var_dump($a[3.2]);"
+      "var_dump($a[array(3)]);"
+      "var_dump($a[$a]);"
+      "var_dump($a['57']);"
+      "var_dump($a['6.5']);"
+      ""
+      "echo \"unsets\\n\";"
+      "unset($a[true]);"
+      "unset($a[NULL]);"
+      "unset($a[3.2]);"
+      "unset($a[array(3)]);"
+      "unset($a[$a]);"
+      "unset($a['57']);"
+      "unset($a['6.5']);"
+      ""
+      "echo \"issets\\n\";"
+      "isset($a[true]);"
+      "isset($a[NULL]);"
+      "isset($a[3.2]);"
+      "isset($a[array(3)]);"
+      "isset($a[$a]);"
+      "isset($a['57']);"
+      "isset($a['6.5']);");
+
 #if 0
   MVCR("<?php "
        "class foo"
@@ -3794,6 +3858,28 @@ bool TestCodeRun::TestReference() {
       "$var = null;"
       "test2($some_ref = &$var);"
       "var_dump($some_ref, $var);");
+
+  MVCR("<?php "
+       "$foo = 123;"
+       "function &baz() {"
+       "  global $foo;"
+       "  return $foo;"
+       "}"
+       "function bar() {"
+       "  $baz = 'baz';"
+       "  return $baz();"
+       "}"
+       "function buz() {"
+       "  global $foo;"
+       "  return ($foo);"
+       "}"
+       "$a = &bar();"
+       "$a = 456;"
+       "var_dump($a, $foo);"
+       "$a = &buz();"
+       "$a = 789;"
+       "var_dump($a, $foo);");
+
   return true;
 }
 
@@ -6700,6 +6786,28 @@ bool TestCodeRun::TestPrint() {
 }
 
 bool TestCodeRun::TestLocale() {
+  MVCRO("<?php "
+        "class A { public $a; function __toString() { return $this->a;}} "
+        "$a = new A; $a->a = 'a'; $b = new A; $b->a = 'b'; "
+        "$arr = array($a, $b); sort($arr, SORT_REGULAR, true); "
+        "print ((string)$arr[0]);",
+        "a");
+  MVCRO("<?php "
+        "class A { public $a; }"
+        "$a = new A; $a->a = 'a'; $b = new A; $b->a = 'b'; "
+        "$arr = array($b, $a);"
+        "print $arr[0]->a;"
+        "sort($arr, SORT_REGULAR, true); "
+        "print $arr[0]->a;",
+        "ba");
+  MVCRO("<?php "
+        "$a = array(1);"
+        "$b = array(2);"
+        "$arr = array($b, $a);"
+        "print $arr[0][0];"
+        "asort($arr, SORT_REGULAR, true); "
+        "print $arr[0][0];",
+        "22");
   MVCR("<?php "
       "$a = array(\"a bc\", \"\\xc1 bc\", \"d ef\");"
       "asort($a);"
