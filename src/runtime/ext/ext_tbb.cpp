@@ -24,6 +24,9 @@ void f_yo(CStrRef data) {
 	g_context->out().write((const char *)data, data.length());
 }
 
+void f_parallel_for(int start, int length, int blocksize, CVarRef func) {
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 }

@@ -24,6 +24,7 @@ bool TestExtTbb::RunTests(const std::string &which) {
   bool ret = true;
 
   RUN_TEST(test_yo);
+  RUN_TEST(test_parallel_for);
 
   return ret;
 }
@@ -31,5 +32,9 @@ bool TestExtTbb::RunTests(const std::string &which) {
 ///////////////////////////////////////////////////////////////////////////////
 
 bool TestExtTbb::test_yo() {
+  return Count(true);
+}
+
+bool TestExtTbb::test_parallel_for() {
   return Count(true);
 }

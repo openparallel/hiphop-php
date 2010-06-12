@@ -28,6 +28,7 @@ class TestExtTbb : public TestCppExt {
   virtual bool RunTests(const std::string &which);
 
   bool test_yo();
+  bool test_parallel_for();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
