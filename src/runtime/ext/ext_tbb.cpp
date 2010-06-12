@@ -17,6 +17,11 @@
 
 #include <runtime/ext/ext_tbb.h>
 
+namespace TBB_EXT {
+	class temp_class {
+	};
+}
+
 namespace HPHP {
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +30,16 @@ void f_yo(CStrRef data) {
 }
 
 void f_parallel_for(int start, int length, int blocksize, CVarRef func) {
+	Array indices = Array::Create();
+
+	for (int i = start; i < length; i++) {
+		indices.append(i);
+	}
+
+	Array args;
+	args.set(0, indices);
+
+	f_call_user_func_array(func, args);
 }
 
 
