@@ -67,6 +67,7 @@
 #include <runtime/ext/profile/extprofile_sqlite3.h>
 #include <runtime/ext/profile/extprofile_stream.h>
 #include <runtime/ext/profile/extprofile_string.h>
+#include <runtime/ext/profile/extprofile_tbb.h>
 #include <runtime/ext/profile/extprofile_thread.h>
 #include <runtime/ext/profile/extprofile_thrift.h>
 #include <runtime/ext/profile/extprofile_url.h>

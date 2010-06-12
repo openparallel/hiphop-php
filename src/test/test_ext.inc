@@ -50,6 +50,7 @@ RUN_TESTSUITE(TestExtSplfile);
 RUN_TESTSUITE(TestExtSqlite3);
 RUN_TESTSUITE(TestExtStream);
 RUN_TESTSUITE(TestExtString);
+RUN_TESTSUITE(TestExtTbb);
 RUN_TESTSUITE(TestExtThread);
 RUN_TESTSUITE(TestExtThrift);
 RUN_TESTSUITE(TestExtUrl);

@@ -50,6 +50,7 @@
 #include "sqlite3.inc"
 #include "stream.inc"
 #include "string.inc"
+#include "tbb.inc"
 #include "thread.inc"
 #include "thrift.inc"
 #include "url.inc"

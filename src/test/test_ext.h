@@ -65,6 +65,7 @@
 #include <test/test_ext_sqlite3.h>
 #include <test/test_ext_stream.h>
 #include <test/test_ext_string.h>
+#include <test/test_ext_tbb.h>
 #include <test/test_ext_thread.h>
 #include <test/test_ext_thrift.h>
 #include <test/test_ext_url.h>
