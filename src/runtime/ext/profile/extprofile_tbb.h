@@ -30,9 +30,9 @@ inline void x_yo(CStrRef data) {
   f_yo(data);
 }
 
-inline void x_parallel_for(int start, int length, int blocksize, CVarRef func) {
+inline void x_parallel_for(int start, int length, CVarRef func, int blocksize = -1) {
   FUNCTION_INJECTION_BUILTIN(parallel_for);
-  f_parallel_for(start, length, blocksize, func);
+  f_parallel_for(start, length, func, blocksize);
 }
 
 

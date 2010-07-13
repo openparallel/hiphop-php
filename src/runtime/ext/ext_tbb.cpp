@@ -50,9 +50,16 @@ void f_yo(CStrRef data) {
 	g_context->out().write((const char *)data, data.length());
 }
 
-void f_parallel_for(int start, int length, int blocksize, CVarRef func) {
+void f_parallel_for(int start, int length, CVarRef func, int blocksize /* = -1 */) {
         // Magic. Probably need to initialize TBB somewhere though
-        tbb::parallel_for(tbb::blocked_range<int>(start, length, blocksize), temp_tbb_class(func));
+
+        if (blocksize == -1) {
+                // Use auto_partitioner for block size
+                tbb::parallel_for(tbb::blocked_range<int>(start, length), temp_tbb_class(func), tbb::auto_partitioner());
+        } else {
+                // Use manually set block size
+                tbb::parallel_for(tbb::blocked_range<int>(start, length, blocksize), temp_tbb_class(func));
+        }
 }
 
 
