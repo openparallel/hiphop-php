@@ -41,8 +41,7 @@ Array f_get_declared_interfaces() {
 }
 
 bool f_class_exists(CStrRef class_name, bool autoload /* = true */) {
-  const ClassInfo::ClassInfo *info =
-    ClassInfo::FindClass(class_name.data());
+  const ClassInfo *info = ClassInfo::FindClass(class_name.data());
   if (info) {
     if (autoload && (info->getAttribute() & ClassInfo::IsVolatile) != 0) {
       checkClassExists(class_name, get_globals(), true);
@@ -53,8 +52,7 @@ bool f_class_exists(CStrRef class_name, bool autoload /* = true */) {
 }
 
 bool f_interface_exists(CStrRef interface_name, bool autoload /* = true */) {
-  const ClassInfo::ClassInfo *info =
-    ClassInfo::FindInterface(interface_name.data());
+  const ClassInfo *info = ClassInfo::FindInterface(interface_name.data());
   if (info) {
     if (autoload && (info->getAttribute() & ClassInfo::IsVolatile) != 0) {
       checkClassExists(interface_name, get_globals(), true);
