@@ -16,6 +16,10 @@ Array f_concurrent_globals() {
   throw NotImplementedException(__func__);
 }
 
+Variant f_parallel_reduce(CVarRef data, CVarRef workerfunction, CVarRef initialvalue, CVarRef joinfunction /* = null_variant */) {
+  throw NotImplementedException(__func__);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 }

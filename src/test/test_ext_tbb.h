@@ -15,7 +15,9 @@ class TestExtTbb : public TestCppExt {
   bool test_parallel_for();
   bool test_parallel_for_array();
   bool test_concurrent_globals();
+  bool test_parallel_reduce();
   bool test_ConcurrentVector();
+  bool test_ConcurrentHash();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

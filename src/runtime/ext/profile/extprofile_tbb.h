@@ -24,6 +24,11 @@ inline Array x_concurrent_globals() {
   return f_concurrent_globals();
 }
 
+inline Variant x_parallel_reduce(CVarRef data, CVarRef workerfunction, CVarRef initialvalue, CVarRef joinfunction = null_variant) {
+  FUNCTION_INJECTION_BUILTIN(parallel_reduce);
+  return f_parallel_reduce(data, workerfunction, initialvalue, joinfunction);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 }

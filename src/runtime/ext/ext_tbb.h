@@ -12,6 +12,7 @@ namespace HPHP {
 void f_parallel_for(int64 start, int64 end, CVarRef func, int64 blocksize = -1);
 Variant f_parallel_for_array(CVarRef arraydata, CVarRef func, int64 blocksize = -1);
 Array f_concurrent_globals();
+Variant f_parallel_reduce(CVarRef data, CVarRef workerfunction, CVarRef initialvalue, CVarRef joinfunction = null_variant);
 
 ///////////////////////////////////////////////////////////////////////////////
 // class ConcurrentVector
@@ -38,6 +39,38 @@ class c_concurrentvector : public ExtObjectData {
 
   // implemented by HPHP
   public: c_concurrentvector *create(Array arraydata = null_array);
+  public: void dynConstruct(CArrRef Params);
+  public: void dynConstructFromEval(Eval::VariableEnvironment &env,
+                                    const Eval::FunctionCallExpression *call);
+  public: virtual void destruct();
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
+// class ConcurrentHash
+
+FORWARD_DECLARE_CLASS(concurrenthash);
+class c_concurrenthash : public ExtObjectData {
+ public:
+  BEGIN_CLASS_MAP(concurrenthash)
+  END_CLASS_MAP(concurrenthash)
+  DECLARE_CLASS(concurrenthash, ConcurrentHash, ObjectData)
+  DECLARE_INVOKES_FROM_EVAL
+  ObjectData* dynCreate(CArrRef params, bool init = true);
+
+  // need to implement
+  public: c_concurrenthash();
+  public: ~c_concurrenthash();
+  public: void t___construct(CArrRef arraydata = null_array);
+  public: int64 t_size();
+  public: Variant t_find(CVarRef key);
+  public: void t_erase(CVarRef key);
+  public: void t_insert(CVarRef key, CVarRef data_item);
+  public: Array t_as_array();
+  public: Variant t___destruct();
+
+  // implemented by HPHP
+  public: c_concurrenthash *create(Array arraydata = null_array);
   public: void dynConstruct(CArrRef Params);
   public: void dynConstructFromEval(Eval::VariableEnvironment &env,
                                     const Eval::FunctionCallExpression *call);
