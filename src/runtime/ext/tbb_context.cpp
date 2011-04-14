@@ -13,8 +13,6 @@
    | obtain it through the world-wide-web, please send a note to          |
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
-   | TBB - context passed to tbb worker classes and held in local thread  |
-   +----------------------------------------------------------------------+
 */
 
 #include "tbb_context.h"
@@ -64,10 +62,10 @@ TbbContext& TbbContext::operator=(const TbbContext &other) {
 	if(localThreadContext->callerStackTop==0) {
 		// We are in the main HipHop thread (for the "VM")
 
-		// printf("TbbContext::Entry(%s) - new thread\n", callerName);
+		//printf("TbbContext::Entry(%s) - new thread\n", callerName);
 	}
 	else {
-		// printf("TbbContext::Entry(%s) - nested thread\n", callerName);
+		//printf("TbbContext::Entry(%s) - nested thread\n", callerName);
 		// We are in a nested thread, e.g. a parallel operation is called from another
 	}
 
@@ -86,7 +84,6 @@ TbbContext& TbbContext::operator=(const TbbContext &other) {
 
       localThreadContext->globalVariables.set(gk, gv);
     }
-	//printf("TbbContext::Entry Set globalVariables to %p\n", localThreadContext->globalVariables);
 
 	return *localThreadContext;
 }
@@ -104,31 +101,43 @@ void TbbContext::Exit() {
 		callerStack.clear();
 	}
 
-//	printf("TbbContext::Exit\n");
+	// printf("TbbContext::Exit\n");
 }
 
 // Called on entry to the operator() in an implementation class
 // This means we are potentially in a new thread
 void TbbContext::EnteringOperator() const {
 	if(localThreadContext->callerStackTop==0) {
-		printf("+++TbbContext::EnteringOperator - new task thread\n");
+		//printf("+++TbbContext::EnteringOperator - new task thread\n");
 
 		// Set the thread context from the parent
 		*localThreadContext = *this;
 
 	} else {
-		printf("TbbContext::EnteringOperator - parent main thread\n");
+		 //printf("TbbContext::EnteringOperator - parent main thread\n");
 	}
 }
 
 // Called on exit from the operator() in an implementation class
 void TbbContext::ExitingOperator() const {
+	//printf("TbbContext::ExitingOperator\n");
+
+	// Clear the stack status so when we get reused, we reinitialize
+	localThreadContext->callerStackTop = 0;
+	localThreadContext->callerStack.clear();
 }
 
 // Get a copy of our global variables
 // Used from the concurrent_globals PHP extension function
 Array TbbContext::GetGlobals() {
-	return localThreadContext->globalVariables;
+	if(localThreadContext->callerStack.size()==0) {
+		// We are on the main thread and have direct access to globals
+		return get_global_array_wrapper();
+	}
+	else {
+		// We are on a worker thread and get a read-only copy of globals
+		return localThreadContext->globalVariables;
+	}
 }
 
 }

@@ -13,8 +13,6 @@
    | obtain it through the world-wide-web, please send a note to          |
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
-   | TBB extension to implement parallel_for and parallel_for_array		  |
-   +----------------------------------------------------------------------+
 */
 #include <vector>
 #include <memory>

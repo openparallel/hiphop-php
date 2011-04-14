@@ -13,9 +13,6 @@
    | obtain it through the world-wide-web, please send a note to          |
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
-   | TBB - implement the concurrent_vector class and the 				  |
-   | concurrent_globals function										  |
-   +----------------------------------------------------------------------+
 */
 
 #include <runtime/ext/ext_tbb.h>
@@ -36,9 +33,8 @@ c_concurrentvector::~c_concurrentvector() {
 
 // Construct from an optional array
 void c_concurrentvector::t___construct(CArrRef srcarray) {
-	INSTANCE_METHOD_INJECTION(concurrentvector, concurrentvector::__construct);
-  
-	if(srcarray.isNull()) {
+  INSTANCE_METHOD_INJECTION(concurrentvector, concurrentvector::__construct);
+  if(srcarray.isNull()) {
 	  return;
 	}
 
@@ -70,7 +66,8 @@ int64 c_concurrentvector::t_size() {
 
 // Get the element at 'index'
 Variant c_concurrentvector::t_element_at(int64 index) {
-	if(index < 0 || index >= (int64)vectorData.size()) {
+  INSTANCE_METHOD_INJECTION(concurrentvector, concurrentvector::element_at);
+  if(index < 0 || index >= (int64)vectorData.size()) {
 		raise_error("ConcurrentVector->element_at, index %lld out of range [0,%lld)", index, (int64)vectorData.size());
 		return Variant();
 	}
@@ -80,7 +77,8 @@ Variant c_concurrentvector::t_element_at(int64 index) {
 
 // Set the element at 'index' to 'data_item'
 void c_concurrentvector::t_set_at(int64 index, CVarRef data_item) {
-	if(index < 0) {
+  INSTANCE_METHOD_INJECTION(concurrentvector, concurrentvector::set_at);
+  if(index < 0) {
 		raise_error("ConcurrentVector->set_at, index %lld < 0", index);
 		return;
 	}
@@ -94,7 +92,8 @@ void c_concurrentvector::t_set_at(int64 index, CVarRef data_item) {
 
 // Return as a PHP array
 Array c_concurrentvector::t_as_array() {
-	Array res;
+  INSTANCE_METHOD_INJECTION(concurrentvector, concurrentvector::as_array);
+  Array res;
 
 	for(tbb::concurrent_vector<Variant>::const_iterator i(vectorData.begin()); i != vectorData.end(); i++) {
 		res.append(*i);
