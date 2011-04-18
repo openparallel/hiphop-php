@@ -91,9 +91,6 @@ class PforTaskParameters {
                     	while(!v.isBoolean() || v.toBoolean())
                     	{
                         	// printf(" outIdx=%d, v=%s\n", (int)outIdx, v.toString().c_str());
-                        	if(pOutputArrayOfVariant->size() <= outIdx)
-                        		pOutputArrayOfVariant->resize(outIdx+1);
-
                         	( *pOutputArrayOfVariant ) [outIdx++] = v;
 
                         	v = pdOutputArray->next();
@@ -102,13 +99,13 @@ class PforTaskParameters {
                 }
 
                 // Construct with context and worker function - used for the parallel_for form.
-                PforTaskParameters(TbbContext context, CVarRef func) : callback(func), callerContext(context) {
-                	pOutputArrayOfVariant = new std::vector<Variant>();
+                PforTaskParameters(TbbContext context, CVarRef func, std::vector<Variant> *pOutArray) : callback(func), callerContext(context) {
+                	pOutputArrayOfVariant = pOutArray;
                 }
 
                 // Construct with context, worker function and array data - used for the parallel_for_array form
-                PforTaskParameters(TbbContext context, ArrayData *inputArrayData, CVarRef func) : callback(func), callerContext(context) {
-                	pOutputArrayOfVariant = new std::vector<Variant>();
+                PforTaskParameters(TbbContext context, ArrayData *inputArrayData, CVarRef func, std::vector<Variant> *pOutArray) : callback(func), callerContext(context) {
+                	pOutputArrayOfVariant = pOutArray;
 
                 	Variant v = inputArrayData->reset();
 
@@ -141,12 +138,15 @@ void f_parallel_for(int64 begin, int64 end, CVarRef func, int64 blocksize /* = -
 
         TbbContext myContext  = TbbContext::Entry("parallel_for");
 
+        std::vector<Variant> outArray;
+        outArray.resize(end-begin);
+
         if (blocksize == -1) {
                 // Use auto_partitioner for block size
-                tbb::parallel_for(tbb::blocked_range<int64>(begin, end), PforTaskParameters(myContext, func), tbb::auto_partitioner());
+                tbb::parallel_for(tbb::blocked_range<int64>(begin, end), PforTaskParameters(myContext, func, &outArray), tbb::auto_partitioner());
         } else {
                 // Use manually set block size
-                tbb::parallel_for(tbb::blocked_range<int64>(begin, end, blocksize), PforTaskParameters(myContext, func));
+                tbb::parallel_for(tbb::blocked_range<int64>(begin, end, blocksize), PforTaskParameters(myContext, func, &outArray));
         }
 
         myContext.Exit();
@@ -181,8 +181,11 @@ Variant f_parallel_for_array(CVarRef arraydata, CVarRef func, int64 blocksize /*
 
     TbbContext myContext  = TbbContext::Entry("parallel_for_array");
 
+    std::vector<Variant> outArray;
+    outArray.resize(asize);
+
     // Construct task parameters
-	PforTaskParameters tclass = PforTaskParameters(myContext, pdArray, func);
+	PforTaskParameters tclass = PforTaskParameters(myContext, pdArray, func, &outArray);
 
     TbbInitializeIfNeeded();
 
@@ -196,19 +199,18 @@ Variant f_parallel_for_array(CVarRef arraydata, CVarRef func, int64 blocksize /*
 
     myContext.Exit();
 
-    // If no output array from any worker, return null
-    if(tclass.pOutputArrayOfVariant->size()==0)
-    	return Variant();
 
     // Create the result array
 	Array resPHPArray = Array::Create();
-	for(size_t ai=0; ai<tclass.pOutputArrayOfVariant->size(); ai++) {
-		Variant amem = ( *tclass.pOutputArrayOfVariant )[ai];
+	for(size_t ai=0; ai<outArray.size(); ai++) {
+		Variant amem = outArray[ai];
 		// printf(" ai=%d, append %s\n", (int)ai, amem.toString().c_str());
-		resPHPArray.append(amem);
+		if(!amem.isNull())
+			resPHPArray.append(amem);
 	}
 
-	delete tclass.pOutputArrayOfVariant;	// Delete here once all the copies are gone
+	if(resPHPArray.size()==0)
+		return Variant();		// i.e null
 
 	return resPHPArray.getArrayData();
 }
