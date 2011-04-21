@@ -18,9 +18,13 @@
 #ifndef TBB_UTILS_H_
 #define TBB_UTILS_H_
 
+#include <runtime/base/complex_types.h>
+
 namespace HPHP {
 
 void TbbInitializeIfNeeded();
+
+Variant DeepCopyVariant(Variant &other);
 
 }
 

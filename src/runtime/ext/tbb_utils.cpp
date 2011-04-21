@@ -16,6 +16,9 @@
 */
 
 #include <tbb/tbb.h>
+#include <runtime/base/hphp.h>
+
+#include "tbb_utils.h"
 
 const int TBB_REQUIRED_THREADS = tbb::task_scheduler_init::automatic;	// work out threads from the machine
 // const int TBB_REQUIRED_THREADS = 1;				// No threading
@@ -31,6 +34,10 @@ void TbbInitializeIfNeeded(){
 		tbbInitDone = true;
 	}
 
+}
+
+Variant DeepCopyVariant(Variant &other) {
+	return x_unserialize(x_serialize(other));
 }
 
 }

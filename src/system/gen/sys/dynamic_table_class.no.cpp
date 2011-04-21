@@ -10034,6 +10034,395 @@ struct ObjectStaticCallbacks cw_domnotation = {
   c_domnotation::os_invoke,
   c_domnotation::os_constant,
 };
+Object co_concurrenthash(CArrRef params, bool init /* = true */) {
+  return Object((NEW(c_concurrenthash)())->dynCreate(params, init));
+}
+#ifndef OMIT_JUMP_TABLE_CLASS_STATIC_GETINIT_concurrenthash
+Variant c_concurrenthash::os_getInit(const char *s, int64 hash) {
+  return c_ObjectData::os_getInit(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_STATIC_GETINIT_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_STATIC_GET_concurrenthash
+Variant c_concurrenthash::os_get(const char *s, int64 hash) {
+  return c_ObjectData::os_get(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_STATIC_GET_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_STATIC_LVAL_concurrenthash
+Variant &c_concurrenthash::os_lval(const char *s, int64 hash) {
+  return c_ObjectData::os_lval(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_STATIC_LVAL_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_GETARRAY_concurrenthash
+void c_concurrenthash::o_get(Array &props) const {
+  c_ObjectData::o_get(props);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_GETARRAY_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_get_concurrenthash
+Variant c_concurrenthash::o_get(CStrRef prop, int64 phash, bool error /* = true */, const char *context /* = NULL */) {
+  return c_concurrenthash::o_getPublic(prop, phash, error);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_get_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_get_PUBLIC_concurrenthash
+Variant c_concurrenthash::o_getPublic(CStrRef s, int64 hash, bool error /* = true */) {
+  return c_ObjectData::o_getPublic(s, hash, error);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_get_PUBLIC_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_get_PRIVATE_concurrenthash
+Variant c_concurrenthash::o_getPrivate(CStrRef s, int64 hash, bool error /* = true */) {
+  return o_getPublic(s, hash, error);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_get_PRIVATE_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_exists_concurrenthash
+bool c_concurrenthash::o_exists(CStrRef prop, int64 phash, const char *context /* = NULL */) const {
+  return c_concurrenthash::o_existsPublic(prop, phash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_exists_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_exists_PUBLIC_concurrenthash
+bool c_concurrenthash::o_existsPublic(CStrRef s, int64 hash) const {
+  return c_ObjectData::o_existsPublic(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_exists_PUBLIC_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_exists_PRIVATE_concurrenthash
+bool c_concurrenthash::o_existsPrivate(CStrRef s, int64 hash) const {
+  return o_existsPublic(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_exists_PRIVATE_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_set_concurrenthash
+Variant c_concurrenthash::o_set(CStrRef prop, int64 phash, CVarRef v, bool forInit /* = false */, const char *context /* = NULL */) {
+  return c_concurrenthash::o_setPublic(prop, phash, v, forInit);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_set_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_set_PUBLIC_concurrenthash
+Variant c_concurrenthash::o_setPublic(CStrRef s, int64 hash, CVarRef v, bool forInit /* = false */) {
+  return c_ObjectData::o_setPublic(s, hash, v, forInit);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_set_PUBLIC_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_set_PRIVATE_concurrenthash
+Variant c_concurrenthash::o_setPrivate(CStrRef s, int64 hash, CVarRef v, bool forInit /* = false */) {
+  return o_setPublic(s, hash, v, forInit);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_set_PRIVATE_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_lval_concurrenthash
+Variant& c_concurrenthash::o_lval(CStrRef prop, int64 phash, const char *context /* = NULL */) {
+  return c_concurrenthash::o_lvalPublic(prop, phash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_lval_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_lval_PUBLIC_concurrenthash
+Variant& c_concurrenthash::o_lvalPublic(CStrRef s, int64 hash) {
+  return c_ObjectData::o_lvalPublic(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_lval_PUBLIC_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_lval_PRIVATE_concurrenthash
+Variant& c_concurrenthash::o_lvalPrivate(CStrRef s, int64 hash) {
+  return o_lvalPublic(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_lval_PRIVATE_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_CONSTANT_concurrenthash
+Variant c_concurrenthash::os_constant(const char *s) {
+  return c_ObjectData::os_constant(s);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_CONSTANT_concurrenthash
+IMPLEMENT_CLASS(concurrenthash)
+c_concurrenthash *c_concurrenthash::create(Array a0) {
+  CountableHelper h(this);
+  init();
+  t___construct(a0);
+  return this;
+}
+ObjectData *c_concurrenthash::dynCreate(CArrRef params, bool construct /* = true */) {
+  init();
+  if (construct) {
+    CountableHelper h(this);
+    int count __attribute__((__unused__)) = params.size();
+    if (count > 1) throw_toomany_arguments("__construct", 1, 2);
+    if (count <= 0) (t___construct());
+    else (t___construct(params[0]));
+  }
+  return this;
+}
+void c_concurrenthash::dynConstruct(CArrRef params) {
+  int count __attribute__((__unused__)) = params.size();
+  if (count > 1) throw_toomany_arguments("__construct", 1, 2);
+  if (count <= 0) (t___construct());
+  else (t___construct(params[0]));
+}
+void c_concurrenthash::dynConstructFromEval(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
+  Variant a0;
+  const std::vector<Eval::ExpressionPtr> &params = caller->params();
+  int count __attribute__((__unused__)) = params.size();
+  if (count > 1) throw_toomany_arguments("__construct", 1, 1);
+  std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+  do {
+    if (it == params.end()) break;
+    a0 = (*it)->eval(env);
+    it++;
+  } while(false);
+  for (; it != params.end(); ++it) {
+    (*it)->eval(env);
+  }
+  if (count <= 0) (t___construct(), null);
+  else (t___construct(a0), null);
+}
+void c_concurrenthash::destruct() {
+  if (!inCtorDtor()) {
+    incRefCount();
+    try {
+      t___destruct();
+    } catch (...) { handle_destructor_exception();}
+  }
+}
+ObjectData *c_concurrenthash::cloneImpl() {
+  c_concurrenthash *obj = NEW(c_concurrenthash)();
+  cloneSet(obj);
+  return obj;
+}
+void c_concurrenthash::cloneSet(c_concurrenthash *clone) {
+  ObjectData::cloneSet(clone);
+}
+#ifndef OMIT_JUMP_TABLE_CLASS_INVOKE_concurrenthash
+Variant c_concurrenthash::o_invoke(const char *s, CArrRef params, int64 hash, bool fatal) {
+  int count __attribute__((__unused__)) = params.size();
+  if (hash < 0) hash = hash_string_i(s);
+  switch (hash & 15) {
+    case 0:
+      HASH_GUARD(0x3A88D49C06AF8890LL, size) {
+        if (count > 0) return throw_toomany_arguments("size", 0, 1);
+        return (t_size());
+      }
+      break;
+    case 3:
+      HASH_GUARD(0x2A9C172C6A3B5403LL, find) {
+        if (count != 1) return throw_wrong_arguments("find", count, 1, 1, 1);
+        return (t_find(params[0]));
+      }
+      HASH_GUARD(0x7F974836AACC1EF3LL, __destruct) {
+        if (count > 0) return throw_toomany_arguments("__destruct", 0, 1);
+        return (t___destruct());
+      }
+      break;
+    case 8:
+      HASH_GUARD(0x1C453724CCB144B8LL, as_array) {
+        if (count > 0) return throw_toomany_arguments("as_array", 0, 1);
+        return (t_as_array());
+      }
+      break;
+    case 13:
+      HASH_GUARD(0x00DFE2FA5EA20DEDLL, erase) {
+        if (count != 1) return throw_wrong_arguments("erase", count, 1, 1, 1);
+        return (t_erase(params[0]), null);
+      }
+      break;
+    case 14:
+      HASH_GUARD(0x61F327248511D92ELL, insert) {
+        if (count != 2) return throw_wrong_arguments("insert", count, 2, 2, 1);
+        return (t_insert(params[0], params[1]), null);
+      }
+      break;
+    case 15:
+      HASH_GUARD(0x0D31D0AC229C615FLL, __construct) {
+        if (count > 1) return throw_toomany_arguments("__construct", 1, 1);
+        if (count <= 0) return (t___construct(), null);
+        return (t___construct(params[0]), null);
+      }
+      break;
+    default:
+      break;
+  }
+  return c_ObjectData::o_invoke(s, params, hash, fatal);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_INVOKE_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_INVOKE_concurrenthash
+Variant c_concurrenthash::o_invoke_few_args(const char *s, int64 hash, int count, CVarRef a0, CVarRef a1, CVarRef a2, CVarRef a3, CVarRef a4, CVarRef a5) {
+  if (hash < 0) hash = hash_string_i(s);
+  switch (hash & 15) {
+    case 0:
+      HASH_GUARD(0x3A88D49C06AF8890LL, size) {
+        if (count > 0) return throw_toomany_arguments("size", 0, 1);
+        return (t_size());
+      }
+      break;
+    case 3:
+      HASH_GUARD(0x2A9C172C6A3B5403LL, find) {
+        if (count != 1) return throw_wrong_arguments("find", count, 1, 1, 1);
+        return (t_find(a0));
+      }
+      HASH_GUARD(0x7F974836AACC1EF3LL, __destruct) {
+        if (count > 0) return throw_toomany_arguments("__destruct", 0, 1);
+        return (t___destruct());
+      }
+      break;
+    case 8:
+      HASH_GUARD(0x1C453724CCB144B8LL, as_array) {
+        if (count > 0) return throw_toomany_arguments("as_array", 0, 1);
+        return (t_as_array());
+      }
+      break;
+    case 13:
+      HASH_GUARD(0x00DFE2FA5EA20DEDLL, erase) {
+        if (count != 1) return throw_wrong_arguments("erase", count, 1, 1, 1);
+        return (t_erase(a0), null);
+      }
+      break;
+    case 14:
+      HASH_GUARD(0x61F327248511D92ELL, insert) {
+        if (count != 2) return throw_wrong_arguments("insert", count, 2, 2, 1);
+        return (t_insert(a0, a1), null);
+      }
+      break;
+    case 15:
+      HASH_GUARD(0x0D31D0AC229C615FLL, __construct) {
+        if (count > 1) return throw_toomany_arguments("__construct", 1, 1);
+        if (count <= 0) return (t___construct(), null);
+        return (t___construct(a0), null);
+      }
+      break;
+    default:
+      break;
+  }
+  return c_ObjectData::o_invoke_few_args(s, hash, count, a0, a1, a2, a3, a4, a5);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_INVOKE_concurrenthash
+#ifndef OMIT_JUMP_TABLE_CLASS_STATIC_INVOKE_concurrenthash
+Variant c_concurrenthash::os_invoke(const char *c, const char *s, CArrRef params, int64 hash, bool fatal) {
+  int count __attribute__((__unused__)) = params.size();
+  return c_ObjectData::os_invoke(c, s, params, hash, fatal);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_STATIC_INVOKE_concurrenthash
+Variant c_concurrenthash::o_invoke_from_eval(const char *s, Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller, int64 hash, bool fatal) {
+  if (hash < 0) hash = hash_string_i(s);
+  switch (hash & 15) {
+    case 0:
+      HASH_GUARD(0x3A88D49C06AF8890LL, size) {
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count > 0) return throw_toomany_arguments("size", 0, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_size());
+      }
+      break;
+    case 3:
+      HASH_GUARD(0x2A9C172C6A3B5403LL, find) {
+        Variant a0;
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count != 1) return throw_wrong_arguments("find", count, 1, 1, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+          if (it == params.end()) break;
+          a0 = (*it)->eval(env);
+          it++;
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_find(a0));
+      }
+      HASH_GUARD(0x7F974836AACC1EF3LL, __destruct) {
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count > 0) return throw_toomany_arguments("__destruct", 0, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t___destruct());
+      }
+      break;
+    case 8:
+      HASH_GUARD(0x1C453724CCB144B8LL, as_array) {
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count > 0) return throw_toomany_arguments("as_array", 0, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_as_array());
+      }
+      break;
+    case 13:
+      HASH_GUARD(0x00DFE2FA5EA20DEDLL, erase) {
+        Variant a0;
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count != 1) return throw_wrong_arguments("erase", count, 1, 1, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+          if (it == params.end()) break;
+          a0 = (*it)->eval(env);
+          it++;
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_erase(a0), null);
+      }
+      break;
+    case 14:
+      HASH_GUARD(0x61F327248511D92ELL, insert) {
+        Variant a0;
+        Variant a1;
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count != 2) return throw_wrong_arguments("insert", count, 2, 2, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+          if (it == params.end()) break;
+          a0 = (*it)->eval(env);
+          it++;
+          if (it == params.end()) break;
+          a1 = (*it)->eval(env);
+          it++;
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_insert(a0, a1), null);
+      }
+      break;
+    case 15:
+      HASH_GUARD(0x0D31D0AC229C615FLL, __construct) {
+        Variant a0;
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count > 1) return throw_toomany_arguments("__construct", 1, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+          if (it == params.end()) break;
+          a0 = (*it)->eval(env);
+          it++;
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        if (count <= 0) return (t___construct(), null);
+        else return (t___construct(a0), null);
+      }
+      break;
+    default:
+      break;
+  }
+  return c_ObjectData::o_invoke_from_eval(s, env, caller, hash, fatal);
+}
+Variant c_concurrenthash::os_invoke_from_eval(const char *c, const char *s, Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller, int64 hash, bool fatal) {
+  return c_ObjectData::os_invoke_from_eval(c, s, env, caller, hash, fatal);
+}
+struct ObjectStaticCallbacks cw_concurrenthash = {
+  c_concurrenthash::os_getInit,
+  c_concurrenthash::os_get,
+  c_concurrenthash::os_lval,
+  c_concurrenthash::os_invoke,
+  c_concurrenthash::os_constant,
+};
 Object co_domcomment(CArrRef params, bool init /* = true */) {
   return Object((NEW(c_domcomment)())->dynCreate(params, init));
 }
@@ -15567,6 +15956,389 @@ struct ObjectStaticCallbacks cw_domprocessinginstruction = {
   c_domprocessinginstruction::os_lval,
   c_domprocessinginstruction::os_invoke,
   c_domprocessinginstruction::os_constant,
+};
+Object co_concurrentvector(CArrRef params, bool init /* = true */) {
+  return Object((NEW(c_concurrentvector)())->dynCreate(params, init));
+}
+#ifndef OMIT_JUMP_TABLE_CLASS_STATIC_GETINIT_concurrentvector
+Variant c_concurrentvector::os_getInit(const char *s, int64 hash) {
+  return c_ObjectData::os_getInit(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_STATIC_GETINIT_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_STATIC_GET_concurrentvector
+Variant c_concurrentvector::os_get(const char *s, int64 hash) {
+  return c_ObjectData::os_get(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_STATIC_GET_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_STATIC_LVAL_concurrentvector
+Variant &c_concurrentvector::os_lval(const char *s, int64 hash) {
+  return c_ObjectData::os_lval(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_STATIC_LVAL_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_GETARRAY_concurrentvector
+void c_concurrentvector::o_get(Array &props) const {
+  c_ObjectData::o_get(props);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_GETARRAY_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_get_concurrentvector
+Variant c_concurrentvector::o_get(CStrRef prop, int64 phash, bool error /* = true */, const char *context /* = NULL */) {
+  return c_concurrentvector::o_getPublic(prop, phash, error);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_get_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_get_PUBLIC_concurrentvector
+Variant c_concurrentvector::o_getPublic(CStrRef s, int64 hash, bool error /* = true */) {
+  return c_ObjectData::o_getPublic(s, hash, error);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_get_PUBLIC_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_get_PRIVATE_concurrentvector
+Variant c_concurrentvector::o_getPrivate(CStrRef s, int64 hash, bool error /* = true */) {
+  return o_getPublic(s, hash, error);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_get_PRIVATE_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_exists_concurrentvector
+bool c_concurrentvector::o_exists(CStrRef prop, int64 phash, const char *context /* = NULL */) const {
+  return c_concurrentvector::o_existsPublic(prop, phash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_exists_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_exists_PUBLIC_concurrentvector
+bool c_concurrentvector::o_existsPublic(CStrRef s, int64 hash) const {
+  return c_ObjectData::o_existsPublic(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_exists_PUBLIC_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_exists_PRIVATE_concurrentvector
+bool c_concurrentvector::o_existsPrivate(CStrRef s, int64 hash) const {
+  return o_existsPublic(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_exists_PRIVATE_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_set_concurrentvector
+Variant c_concurrentvector::o_set(CStrRef prop, int64 phash, CVarRef v, bool forInit /* = false */, const char *context /* = NULL */) {
+  return c_concurrentvector::o_setPublic(prop, phash, v, forInit);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_set_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_set_PUBLIC_concurrentvector
+Variant c_concurrentvector::o_setPublic(CStrRef s, int64 hash, CVarRef v, bool forInit /* = false */) {
+  return c_ObjectData::o_setPublic(s, hash, v, forInit);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_set_PUBLIC_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_set_PRIVATE_concurrentvector
+Variant c_concurrentvector::o_setPrivate(CStrRef s, int64 hash, CVarRef v, bool forInit /* = false */) {
+  return o_setPublic(s, hash, v, forInit);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_set_PRIVATE_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_lval_concurrentvector
+Variant& c_concurrentvector::o_lval(CStrRef prop, int64 phash, const char *context /* = NULL */) {
+  return c_concurrentvector::o_lvalPublic(prop, phash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_lval_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_lval_PUBLIC_concurrentvector
+Variant& c_concurrentvector::o_lvalPublic(CStrRef s, int64 hash) {
+  return c_ObjectData::o_lvalPublic(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_lval_PUBLIC_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_lval_PRIVATE_concurrentvector
+Variant& c_concurrentvector::o_lvalPrivate(CStrRef s, int64 hash) {
+  return o_lvalPublic(s, hash);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_lval_PRIVATE_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_CONSTANT_concurrentvector
+Variant c_concurrentvector::os_constant(const char *s) {
+  return c_ObjectData::os_constant(s);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_CONSTANT_concurrentvector
+IMPLEMENT_CLASS(concurrentvector)
+c_concurrentvector *c_concurrentvector::create(Array a0) {
+  CountableHelper h(this);
+  init();
+  t___construct(a0);
+  return this;
+}
+ObjectData *c_concurrentvector::dynCreate(CArrRef params, bool construct /* = true */) {
+  init();
+  if (construct) {
+    CountableHelper h(this);
+    int count __attribute__((__unused__)) = params.size();
+    if (count > 1) throw_toomany_arguments("__construct", 1, 2);
+    if (count <= 0) (t___construct());
+    else (t___construct(params[0]));
+  }
+  return this;
+}
+void c_concurrentvector::dynConstruct(CArrRef params) {
+  int count __attribute__((__unused__)) = params.size();
+  if (count > 1) throw_toomany_arguments("__construct", 1, 2);
+  if (count <= 0) (t___construct());
+  else (t___construct(params[0]));
+}
+void c_concurrentvector::dynConstructFromEval(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
+  Variant a0;
+  const std::vector<Eval::ExpressionPtr> &params = caller->params();
+  int count __attribute__((__unused__)) = params.size();
+  if (count > 1) throw_toomany_arguments("__construct", 1, 1);
+  std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+  do {
+    if (it == params.end()) break;
+    a0 = (*it)->eval(env);
+    it++;
+  } while(false);
+  for (; it != params.end(); ++it) {
+    (*it)->eval(env);
+  }
+  if (count <= 0) (t___construct(), null);
+  else (t___construct(a0), null);
+}
+void c_concurrentvector::destruct() {
+  if (!inCtorDtor()) {
+    incRefCount();
+    try {
+      t___destruct();
+    } catch (...) { handle_destructor_exception();}
+  }
+}
+ObjectData *c_concurrentvector::cloneImpl() {
+  c_concurrentvector *obj = NEW(c_concurrentvector)();
+  cloneSet(obj);
+  return obj;
+}
+void c_concurrentvector::cloneSet(c_concurrentvector *clone) {
+  ObjectData::cloneSet(clone);
+}
+#ifndef OMIT_JUMP_TABLE_CLASS_INVOKE_concurrentvector
+Variant c_concurrentvector::o_invoke(const char *s, CArrRef params, int64 hash, bool fatal) {
+  int count __attribute__((__unused__)) = params.size();
+  if (hash < 0) hash = hash_string_i(s);
+  switch (hash & 15) {
+    case 0:
+      HASH_GUARD(0x3A88D49C06AF8890LL, size) {
+        if (count > 0) return throw_toomany_arguments("size", 0, 1);
+        return (t_size());
+      }
+      break;
+    case 3:
+      HASH_GUARD(0x7F974836AACC1EF3LL, __destruct) {
+        if (count > 0) return throw_toomany_arguments("__destruct", 0, 1);
+        return (t___destruct());
+      }
+      HASH_GUARD(0x0E5B3A7FEF8452D3LL, element_at) {
+        if (count != 1) return throw_wrong_arguments("element_at", count, 1, 1, 1);
+        return (t_element_at(params[0]));
+      }
+      break;
+    case 8:
+      HASH_GUARD(0x1C453724CCB144B8LL, as_array) {
+        if (count > 0) return throw_toomany_arguments("as_array", 0, 1);
+        return (t_as_array());
+      }
+      HASH_GUARD(0x321E2BF5D878AA38LL, push) {
+        if (count != 1) return throw_wrong_arguments("push", count, 1, 1, 1);
+        return (t_push(params[0]), null);
+      }
+      break;
+    case 14:
+      HASH_GUARD(0x5F79EF9A7F2CF5FELL, set_at) {
+        if (count != 2) return throw_wrong_arguments("set_at", count, 2, 2, 1);
+        return (t_set_at(params[0], params[1]), null);
+      }
+      break;
+    case 15:
+      HASH_GUARD(0x0D31D0AC229C615FLL, __construct) {
+        if (count > 1) return throw_toomany_arguments("__construct", 1, 1);
+        if (count <= 0) return (t___construct(), null);
+        return (t___construct(params[0]), null);
+      }
+      break;
+    default:
+      break;
+  }
+  return c_ObjectData::o_invoke(s, params, hash, fatal);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_INVOKE_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_INVOKE_concurrentvector
+Variant c_concurrentvector::o_invoke_few_args(const char *s, int64 hash, int count, CVarRef a0, CVarRef a1, CVarRef a2, CVarRef a3, CVarRef a4, CVarRef a5) {
+  if (hash < 0) hash = hash_string_i(s);
+  switch (hash & 15) {
+    case 0:
+      HASH_GUARD(0x3A88D49C06AF8890LL, size) {
+        if (count > 0) return throw_toomany_arguments("size", 0, 1);
+        return (t_size());
+      }
+      break;
+    case 3:
+      HASH_GUARD(0x7F974836AACC1EF3LL, __destruct) {
+        if (count > 0) return throw_toomany_arguments("__destruct", 0, 1);
+        return (t___destruct());
+      }
+      HASH_GUARD(0x0E5B3A7FEF8452D3LL, element_at) {
+        if (count != 1) return throw_wrong_arguments("element_at", count, 1, 1, 1);
+        return (t_element_at(a0));
+      }
+      break;
+    case 8:
+      HASH_GUARD(0x1C453724CCB144B8LL, as_array) {
+        if (count > 0) return throw_toomany_arguments("as_array", 0, 1);
+        return (t_as_array());
+      }
+      HASH_GUARD(0x321E2BF5D878AA38LL, push) {
+        if (count != 1) return throw_wrong_arguments("push", count, 1, 1, 1);
+        return (t_push(a0), null);
+      }
+      break;
+    case 14:
+      HASH_GUARD(0x5F79EF9A7F2CF5FELL, set_at) {
+        if (count != 2) return throw_wrong_arguments("set_at", count, 2, 2, 1);
+        return (t_set_at(a0, a1), null);
+      }
+      break;
+    case 15:
+      HASH_GUARD(0x0D31D0AC229C615FLL, __construct) {
+        if (count > 1) return throw_toomany_arguments("__construct", 1, 1);
+        if (count <= 0) return (t___construct(), null);
+        return (t___construct(a0), null);
+      }
+      break;
+    default:
+      break;
+  }
+  return c_ObjectData::o_invoke_few_args(s, hash, count, a0, a1, a2, a3, a4, a5);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_INVOKE_concurrentvector
+#ifndef OMIT_JUMP_TABLE_CLASS_STATIC_INVOKE_concurrentvector
+Variant c_concurrentvector::os_invoke(const char *c, const char *s, CArrRef params, int64 hash, bool fatal) {
+  int count __attribute__((__unused__)) = params.size();
+  return c_ObjectData::os_invoke(c, s, params, hash, fatal);
+}
+#endif // OMIT_JUMP_TABLE_CLASS_STATIC_INVOKE_concurrentvector
+Variant c_concurrentvector::o_invoke_from_eval(const char *s, Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller, int64 hash, bool fatal) {
+  if (hash < 0) hash = hash_string_i(s);
+  switch (hash & 15) {
+    case 0:
+      HASH_GUARD(0x3A88D49C06AF8890LL, size) {
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count > 0) return throw_toomany_arguments("size", 0, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_size());
+      }
+      break;
+    case 3:
+      HASH_GUARD(0x7F974836AACC1EF3LL, __destruct) {
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count > 0) return throw_toomany_arguments("__destruct", 0, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t___destruct());
+      }
+      HASH_GUARD(0x0E5B3A7FEF8452D3LL, element_at) {
+        Variant a0;
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count != 1) return throw_wrong_arguments("element_at", count, 1, 1, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+          if (it == params.end()) break;
+          a0 = (*it)->eval(env);
+          it++;
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_element_at(a0));
+      }
+      break;
+    case 8:
+      HASH_GUARD(0x1C453724CCB144B8LL, as_array) {
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count > 0) return throw_toomany_arguments("as_array", 0, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_as_array());
+      }
+      HASH_GUARD(0x321E2BF5D878AA38LL, push) {
+        Variant a0;
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count != 1) return throw_wrong_arguments("push", count, 1, 1, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+          if (it == params.end()) break;
+          a0 = (*it)->eval(env);
+          it++;
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_push(a0), null);
+      }
+      break;
+    case 14:
+      HASH_GUARD(0x5F79EF9A7F2CF5FELL, set_at) {
+        Variant a0;
+        Variant a1;
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count != 2) return throw_wrong_arguments("set_at", count, 2, 2, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+          if (it == params.end()) break;
+          a0 = (*it)->eval(env);
+          it++;
+          if (it == params.end()) break;
+          a1 = (*it)->eval(env);
+          it++;
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        return (t_set_at(a0, a1), null);
+      }
+      break;
+    case 15:
+      HASH_GUARD(0x0D31D0AC229C615FLL, __construct) {
+        Variant a0;
+        const std::vector<Eval::ExpressionPtr> &params = caller->params();
+        int count __attribute__((__unused__)) = params.size();
+        if (count > 1) return throw_toomany_arguments("__construct", 1, 1);
+        std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+        do {
+          if (it == params.end()) break;
+          a0 = (*it)->eval(env);
+          it++;
+        } while(false);
+        for (; it != params.end(); ++it) {
+          (*it)->eval(env);
+        }
+        if (count <= 0) return (t___construct(), null);
+        else return (t___construct(a0), null);
+      }
+      break;
+    default:
+      break;
+  }
+  return c_ObjectData::o_invoke_from_eval(s, env, caller, hash, fatal);
+}
+Variant c_concurrentvector::os_invoke_from_eval(const char *c, const char *s, Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller, int64 hash, bool fatal) {
+  return c_ObjectData::os_invoke_from_eval(c, s, env, caller, hash, fatal);
+}
+struct ObjectStaticCallbacks cw_concurrentvector = {
+  c_concurrentvector::os_getInit,
+  c_concurrentvector::os_get,
+  c_concurrentvector::os_lval,
+  c_concurrentvector::os_invoke,
+  c_concurrentvector::os_constant,
 };
 Object co_pdostatement(CArrRef params, bool init /* = true */) {
   return Object((NEW(c_pdostatement)())->dynCreate(params, init));
@@ -27626,6 +28398,9 @@ Variant get_builtin_class_var_init(const char *s, const char *var) {
       HASH_GET_CLASS_VAR_INIT(0x3D5870E53BF89873LL, arrayiterator);
       HASH_GET_CLASS_VAR_INIT(0x0B61E0BFCFA06573LL, reflectionextension);
       break;
+    case 116:
+      HASH_GET_CLASS_VAR_INIT(0x126B0D414E0AFD74LL, concurrentvector);
+      break;
     case 117:
       HASH_GET_CLASS_VAR_INIT(0x085A4F6FD393D475LL, invalidargumentexception);
       break;
@@ -27722,6 +28497,9 @@ Variant get_builtin_class_var_init(const char *s, const char *var) {
       break;
     case 244:
       HASH_GET_CLASS_VAR_INIT(0x297174231D4912F4LL, domattr);
+      break;
+    case 246:
+      HASH_GET_CLASS_VAR_INIT(0x1D1BA0A732290FF6LL, concurrenthash);
       break;
     case 247:
       HASH_GET_CLASS_VAR_INIT(0x3D69936178BA13F7LL, stdclass);
@@ -27845,6 +28623,9 @@ Object create_builtin_object(const char *s, CArrRef params, bool init /* = true 
       HASH_CREATE_OBJECT(0x3D5870E53BF89873LL, arrayiterator);
       HASH_CREATE_OBJECT(0x0B61E0BFCFA06573LL, reflectionextension);
       break;
+    case 116:
+      HASH_CREATE_OBJECT(0x126B0D414E0AFD74LL, concurrentvector);
+      break;
     case 117:
       HASH_CREATE_OBJECT(0x085A4F6FD393D475LL, invalidargumentexception);
       break;
@@ -27941,6 +28722,9 @@ Object create_builtin_object(const char *s, CArrRef params, bool init /* = true 
       break;
     case 244:
       HASH_CREATE_OBJECT(0x297174231D4912F4LL, domattr);
+      break;
+    case 246:
+      HASH_CREATE_OBJECT(0x1D1BA0A732290FF6LL, concurrenthash);
       break;
     case 247:
       HASH_CREATE_OBJECT(0x3D69936178BA13F7LL, stdclass);
@@ -28064,6 +28848,9 @@ Variant invoke_builtin_static_method(const char *s, const char *method, CArrRef 
       HASH_INVOKE_STATIC_METHOD(0x3D5870E53BF89873LL, arrayiterator);
       HASH_INVOKE_STATIC_METHOD(0x0B61E0BFCFA06573LL, reflectionextension);
       break;
+    case 116:
+      HASH_INVOKE_STATIC_METHOD(0x126B0D414E0AFD74LL, concurrentvector);
+      break;
     case 117:
       HASH_INVOKE_STATIC_METHOD(0x085A4F6FD393D475LL, invalidargumentexception);
       break;
@@ -28160,6 +28947,9 @@ Variant invoke_builtin_static_method(const char *s, const char *method, CArrRef 
       break;
     case 244:
       HASH_INVOKE_STATIC_METHOD(0x297174231D4912F4LL, domattr);
+      break;
+    case 246:
+      HASH_INVOKE_STATIC_METHOD(0x1D1BA0A732290FF6LL, concurrenthash);
       break;
     case 247:
       HASH_INVOKE_STATIC_METHOD(0x3D69936178BA13F7LL, stdclass);
@@ -28288,6 +29078,9 @@ Variant get_builtin_static_property(const char *s, const char *prop) {
       HASH_GET_STATIC_PROPERTY(0x3D5870E53BF89873LL, arrayiterator);
       HASH_GET_STATIC_PROPERTY(0x0B61E0BFCFA06573LL, reflectionextension);
       break;
+    case 116:
+      HASH_GET_STATIC_PROPERTY(0x126B0D414E0AFD74LL, concurrentvector);
+      break;
     case 117:
       HASH_GET_STATIC_PROPERTY(0x085A4F6FD393D475LL, invalidargumentexception);
       break;
@@ -28384,6 +29177,9 @@ Variant get_builtin_static_property(const char *s, const char *prop) {
       break;
     case 244:
       HASH_GET_STATIC_PROPERTY(0x297174231D4912F4LL, domattr);
+      break;
+    case 246:
+      HASH_GET_STATIC_PROPERTY(0x1D1BA0A732290FF6LL, concurrenthash);
       break;
     case 247:
       HASH_GET_STATIC_PROPERTY(0x3D69936178BA13F7LL, stdclass);
@@ -28507,6 +29303,9 @@ Variant *get_builtin_static_property_lv(const char *s, const char *prop) {
       HASH_GET_STATIC_PROPERTY_LV(0x3D5870E53BF89873LL, arrayiterator);
       HASH_GET_STATIC_PROPERTY_LV(0x0B61E0BFCFA06573LL, reflectionextension);
       break;
+    case 116:
+      HASH_GET_STATIC_PROPERTY_LV(0x126B0D414E0AFD74LL, concurrentvector);
+      break;
     case 117:
       HASH_GET_STATIC_PROPERTY_LV(0x085A4F6FD393D475LL, invalidargumentexception);
       break;
@@ -28603,6 +29402,9 @@ Variant *get_builtin_static_property_lv(const char *s, const char *prop) {
       break;
     case 244:
       HASH_GET_STATIC_PROPERTY_LV(0x297174231D4912F4LL, domattr);
+      break;
+    case 246:
+      HASH_GET_STATIC_PROPERTY_LV(0x1D1BA0A732290FF6LL, concurrenthash);
       break;
     case 247:
       HASH_GET_STATIC_PROPERTY_LV(0x3D69936178BA13F7LL, stdclass);
@@ -28726,6 +29528,9 @@ Variant get_builtin_class_constant(const char *s, const char *constant, bool fat
       HASH_GET_CLASS_CONSTANT(0x3D5870E53BF89873LL, arrayiterator);
       HASH_GET_CLASS_CONSTANT(0x0B61E0BFCFA06573LL, reflectionextension);
       break;
+    case 116:
+      HASH_GET_CLASS_CONSTANT(0x126B0D414E0AFD74LL, concurrentvector);
+      break;
     case 117:
       HASH_GET_CLASS_CONSTANT(0x085A4F6FD393D475LL, invalidargumentexception);
       break;
@@ -28822,6 +29627,9 @@ Variant get_builtin_class_constant(const char *s, const char *constant, bool fat
       break;
     case 244:
       HASH_GET_CLASS_CONSTANT(0x297174231D4912F4LL, domattr);
+      break;
+    case 246:
+      HASH_GET_CLASS_CONSTANT(0x1D1BA0A732290FF6LL, concurrenthash);
       break;
     case 247:
       HASH_GET_CLASS_CONSTANT(0x3D69936178BA13F7LL, stdclass);

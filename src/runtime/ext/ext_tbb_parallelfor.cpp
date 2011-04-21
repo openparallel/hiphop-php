@@ -17,6 +17,8 @@
 #include <vector>
 #include <memory>
 
+#include <runtime/base/memory/memory_manager.h>
+
 #include <runtime/ext/ext_tbb.h>
 #include <tbb/tbb.h>
 
@@ -178,6 +180,11 @@ Variant f_parallel_for_array(CVarRef arraydata, CVarRef func, int64 blocksize /*
 	size_t asize = pdArray->size();
 	if(asize==0)
 		return Variant();
+
+	MemoryManager *mm = MemoryManager::TheMemoryManager().get();
+	if (RuntimeOption::CheckMemory) {
+	    mm->checkMemory(false);
+	  }
 
     TbbContext myContext  = TbbContext::Entry("parallel_for_array");
 

@@ -57,8 +57,7 @@ private:
 	// Keep a context for each worker task (=== thread here)
 	static DECLARE_THREAD_LOCAL(TbbContext, localThreadContext);
 
-	tbb::concurrent_vector<std::string> callerStack;			// The stack of callers
-	size_t callerStackTop;										// The top of the stack
+	size_t callDepth;
 
 	// Get a copy of our global variables
 	// Used from the concurrent_globals PHP extension function

@@ -4087,6 +4087,13 @@ Variant i_mailparse_msg_parse(CArrRef params) {
   if (count != 2) return throw_wrong_arguments("mailparse_msg_parse", count, 2, 2, 1);
   return (f_mailparse_msg_parse(params[0], params[1]));
 }
+Variant i_parallel_reduce(CArrRef params) {
+  FUNCTION_INJECTION(parallel_reduce);
+  int count __attribute__((__unused__)) = params.size();
+  if (count < 3 || count > 4) return throw_wrong_arguments("parallel_reduce", count, 3, 4, 1);
+  if (count <= 3) return (f_parallel_reduce(params[0], params[1], params[2]));
+  return (f_parallel_reduce(params[0], params[1], params[2], params[3]));
+}
 Variant i_xmlwriter_text(CArrRef params) {
   FUNCTION_INJECTION(xmlwriter_text);
   int count __attribute__((__unused__)) = params.size();
@@ -8444,6 +8451,13 @@ Variant i_hphp_splfileinfo_getpathinfo(CArrRef params) {
   if (count != 2) return throw_wrong_arguments("hphp_splfileinfo_getpathinfo", count, 2, 2, 1);
   return (f_hphp_splfileinfo_getpathinfo(params[0], params[1]));
 }
+Variant i_parallel_for_array(CArrRef params) {
+  FUNCTION_INJECTION(parallel_for_array);
+  int count __attribute__((__unused__)) = params.size();
+  if (count < 2 || count > 3) return throw_wrong_arguments("parallel_for_array", count, 2, 3, 1);
+  if (count <= 2) return (f_parallel_for_array(params[0], params[1]));
+  return (f_parallel_for_array(params[0], params[1], params[2]));
+}
 Variant i_magickgetimagegamma(CArrRef params) {
   FUNCTION_INJECTION(magickgetimagegamma);
   int count __attribute__((__unused__)) = params.size();
@@ -9327,6 +9341,12 @@ Variant i_timezone_name_from_abbr(CArrRef params) {
   if (count <= 1) return (f_timezone_name_from_abbr(params[0]));
   if (count == 2) return (f_timezone_name_from_abbr(params[0], params[1]));
   return (f_timezone_name_from_abbr(params[0], params[1], params[2]));
+}
+Variant i_concurrent_globals(CArrRef params) {
+  FUNCTION_INJECTION(concurrent_globals);
+  int count __attribute__((__unused__)) = params.size();
+  if (count > 0) return throw_toomany_arguments("concurrent_globals", 0, 1);
+  return (f_concurrent_globals());
 }
 Variant i_imagefilledellipse(CArrRef params) {
   FUNCTION_INJECTION(imagefilledellipse);
@@ -10793,6 +10813,13 @@ Variant i_convert_uuencode(CArrRef params) {
   int count __attribute__((__unused__)) = params.size();
   if (count != 1) return throw_wrong_arguments("convert_uuencode", count, 1, 1, 1);
   return (f_convert_uuencode(params[0]));
+}
+Variant i_parallel_for(CArrRef params) {
+  FUNCTION_INJECTION(parallel_for);
+  int count __attribute__((__unused__)) = params.size();
+  if (count < 3 || count > 4) return throw_wrong_arguments("parallel_for", count, 3, 4, 1);
+  if (count <= 3) return (f_parallel_for(params[0], params[1], params[2]), null);
+  return (f_parallel_for(params[0], params[1], params[2], params[3]), null);
 }
 Variant i_magickequalizeimage(CArrRef params) {
   FUNCTION_INJECTION(magickequalizeimage);
@@ -13012,6 +13039,9 @@ Variant invoke_builtin(const char *s, CArrRef params, int64 hash, bool fatal) {
       break;
     case 468:
       HASH_INVOKE(0x219F3257BA3371D4LL, decbin);
+      break;
+    case 469:
+      HASH_INVOKE(0x0D51579F600B91D5LL, parallel_for_array);
       break;
     case 470:
       HASH_INVOKE(0x78831282736801D6LL, stream_context_get_default);
@@ -16239,6 +16269,9 @@ Variant invoke_builtin(const char *s, CArrRef params, int64 hash, bool fatal) {
     case 3090:
       HASH_INVOKE(0x510B683F2E764C12LL, fb_load_local_databases);
       break;
+    case 3098:
+      HASH_INVOKE(0x3041D5CB2250DC1ALL, concurrent_globals);
+      break;
     case 3099:
       HASH_INVOKE(0x67742A0F218F6C1BLL, posix_initgroups);
       HASH_INVOKE(0x7D615C7E3ADB2C1BLL, xmlwriter_write_comment);
@@ -17185,6 +17218,9 @@ Variant invoke_builtin(const char *s, CArrRef params, int64 hash, bool fatal) {
       HASH_INVOKE(0x6CB6650E66CE4EE8LL, magicksetimagebordercolor);
       HASH_INVOKE(0x32B3951DFD2B9EE8LL, hphp_directoryiterator_isdot);
       break;
+    case 3818:
+      HASH_INVOKE(0x1B5E9DF43266FEEALL, parallel_for);
+      break;
     case 3819:
       HASH_INVOKE(0x72882DBF2D49CEEBLL, set_magic_quotes_runtime);
       break;
@@ -17504,6 +17540,9 @@ Variant invoke_builtin(const char *s, CArrRef params, int64 hash, bool fatal) {
     case 4062:
       HASH_INVOKE(0x7F5FC3CAF8CE9FDELL, gzcompress);
       HASH_INVOKE(0x72925D2DF7E61FDELL, drawpathcurvetoquadraticbeziersmoothrelative);
+      break;
+    case 4067:
+      HASH_INVOKE(0x1D99127B1127AFE3LL, parallel_reduce);
       break;
     case 4071:
       HASH_INVOKE(0x217067889854CFE7LL, xmlwriter_start_dtd);
@@ -30384,6 +30423,35 @@ Variant ei_mailparse_msg_parse(Eval::VariableEnvironment &env, const Eval::Funct
     (*it)->eval(env);
   }
   return (x_mailparse_msg_parse(a0, a1));
+}
+Variant ei_parallel_reduce(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
+  Variant a0;
+  Variant a1;
+  Variant a2;
+  Variant a3;
+  const std::vector<Eval::ExpressionPtr> &params = caller->params();
+  int count __attribute__((__unused__)) = params.size();
+  if (count < 3 || count > 4) return throw_wrong_arguments("parallel_reduce", count, 3, 4, 1);
+  std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+  do {
+    if (it == params.end()) break;
+    a0 = (*it)->eval(env);
+    it++;
+    if (it == params.end()) break;
+    a1 = (*it)->eval(env);
+    it++;
+    if (it == params.end()) break;
+    a2 = (*it)->eval(env);
+    it++;
+    if (it == params.end()) break;
+    a3 = (*it)->eval(env);
+    it++;
+  } while(false);
+  for (; it != params.end(); ++it) {
+    (*it)->eval(env);
+  }
+  if (count <= 3) return (x_parallel_reduce(a0, a1, a2));
+  else return (x_parallel_reduce(a0, a1, a2, a3));
 }
 Variant ei_xmlwriter_text(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
   Variant a0;
@@ -44342,6 +44410,31 @@ Variant ei_hphp_splfileinfo_getpathinfo(Eval::VariableEnvironment &env, const Ev
   }
   return (x_hphp_splfileinfo_getpathinfo(a0, a1));
 }
+Variant ei_parallel_for_array(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
+  Variant a0;
+  Variant a1;
+  Variant a2;
+  const std::vector<Eval::ExpressionPtr> &params = caller->params();
+  int count __attribute__((__unused__)) = params.size();
+  if (count < 2 || count > 3) return throw_wrong_arguments("parallel_for_array", count, 2, 3, 1);
+  std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+  do {
+    if (it == params.end()) break;
+    a0 = (*it)->eval(env);
+    it++;
+    if (it == params.end()) break;
+    a1 = (*it)->eval(env);
+    it++;
+    if (it == params.end()) break;
+    a2 = (*it)->eval(env);
+    it++;
+  } while(false);
+  for (; it != params.end(); ++it) {
+    (*it)->eval(env);
+  }
+  if (count <= 2) return (x_parallel_for_array(a0, a1));
+  else return (x_parallel_for_array(a0, a1, a2));
+}
 Variant ei_magickgetimagegamma(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
   Variant a0;
   const std::vector<Eval::ExpressionPtr> &params = caller->params();
@@ -47247,6 +47340,18 @@ Variant ei_timezone_name_from_abbr(Eval::VariableEnvironment &env, const Eval::F
   if (count <= 1) return (x_timezone_name_from_abbr(a0));
   else if (count == 2) return (x_timezone_name_from_abbr(a0, a1));
   else return (x_timezone_name_from_abbr(a0, a1, a2));
+}
+Variant ei_concurrent_globals(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
+  const std::vector<Eval::ExpressionPtr> &params = caller->params();
+  int count __attribute__((__unused__)) = params.size();
+  if (count > 0) return throw_toomany_arguments("concurrent_globals", 0, 1);
+  std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+  do {
+  } while(false);
+  for (; it != params.end(); ++it) {
+    (*it)->eval(env);
+  }
+  return (x_concurrent_globals());
 }
 Variant ei_imagefilledellipse(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
   Variant a0;
@@ -51855,6 +51960,35 @@ Variant ei_convert_uuencode(Eval::VariableEnvironment &env, const Eval::Function
     (*it)->eval(env);
   }
   return (x_convert_uuencode(a0));
+}
+Variant ei_parallel_for(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
+  Variant a0;
+  Variant a1;
+  Variant a2;
+  Variant a3;
+  const std::vector<Eval::ExpressionPtr> &params = caller->params();
+  int count __attribute__((__unused__)) = params.size();
+  if (count < 3 || count > 4) return throw_wrong_arguments("parallel_for", count, 3, 4, 1);
+  std::vector<Eval::ExpressionPtr>::const_iterator it = params.begin();
+  do {
+    if (it == params.end()) break;
+    a0 = (*it)->eval(env);
+    it++;
+    if (it == params.end()) break;
+    a1 = (*it)->eval(env);
+    it++;
+    if (it == params.end()) break;
+    a2 = (*it)->eval(env);
+    it++;
+    if (it == params.end()) break;
+    a3 = (*it)->eval(env);
+    it++;
+  } while(false);
+  for (; it != params.end(); ++it) {
+    (*it)->eval(env);
+  }
+  if (count <= 3) return (x_parallel_for(a0, a1, a2), null);
+  else return (x_parallel_for(a0, a1, a2, a3), null);
 }
 Variant ei_magickequalizeimage(Eval::VariableEnvironment &env, const Eval::FunctionCallExpression *caller) {
   Variant a0;
@@ -57831,6 +57965,9 @@ Variant Eval::invoke_from_eval_builtin(const char *s, Eval::VariableEnvironment 
     case 468:
       HASH_INVOKE_FROM_EVAL(0x219F3257BA3371D4LL, decbin);
       break;
+    case 469:
+      HASH_INVOKE_FROM_EVAL(0x0D51579F600B91D5LL, parallel_for_array);
+      break;
     case 470:
       HASH_INVOKE_FROM_EVAL(0x78831282736801D6LL, stream_context_get_default);
       break;
@@ -61057,6 +61194,9 @@ Variant Eval::invoke_from_eval_builtin(const char *s, Eval::VariableEnvironment 
     case 3090:
       HASH_INVOKE_FROM_EVAL(0x510B683F2E764C12LL, fb_load_local_databases);
       break;
+    case 3098:
+      HASH_INVOKE_FROM_EVAL(0x3041D5CB2250DC1ALL, concurrent_globals);
+      break;
     case 3099:
       HASH_INVOKE_FROM_EVAL(0x67742A0F218F6C1BLL, posix_initgroups);
       HASH_INVOKE_FROM_EVAL(0x7D615C7E3ADB2C1BLL, xmlwriter_write_comment);
@@ -62003,6 +62143,9 @@ Variant Eval::invoke_from_eval_builtin(const char *s, Eval::VariableEnvironment 
       HASH_INVOKE_FROM_EVAL(0x6CB6650E66CE4EE8LL, magicksetimagebordercolor);
       HASH_INVOKE_FROM_EVAL(0x32B3951DFD2B9EE8LL, hphp_directoryiterator_isdot);
       break;
+    case 3818:
+      HASH_INVOKE_FROM_EVAL(0x1B5E9DF43266FEEALL, parallel_for);
+      break;
     case 3819:
       HASH_INVOKE_FROM_EVAL(0x72882DBF2D49CEEBLL, set_magic_quotes_runtime);
       break;
@@ -62322,6 +62465,9 @@ Variant Eval::invoke_from_eval_builtin(const char *s, Eval::VariableEnvironment 
     case 4062:
       HASH_INVOKE_FROM_EVAL(0x7F5FC3CAF8CE9FDELL, gzcompress);
       HASH_INVOKE_FROM_EVAL(0x72925D2DF7E61FDELL, drawpathcurvetoquadraticbeziersmoothrelative);
+      break;
+    case 4067:
+      HASH_INVOKE_FROM_EVAL(0x1D99127B1127AFE3LL, parallel_reduce);
       break;
     case 4071:
       HASH_INVOKE_FROM_EVAL(0x217067889854CFE7LL, xmlwriter_start_dtd);
